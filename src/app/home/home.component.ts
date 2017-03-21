@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
+import { DataArray1 } from './data';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -17,6 +19,21 @@ export class HomeComponent implements OnInit, OnDestroy {
   public autoShownModal: ModalDirective;
   public isModalShown: boolean = false;
 
+  public config: any = {
+    paging: false,
+    className: ['table-striped', 'table-bordered']
+  };
+
+  public columns: Array<any> = [
+    { title: 'Age', name: 'age' },
+    { title: 'ZIP', name: 'zip' },
+    { title: 'Gender', name: 'gender' },
+    { title: 'Country', name: 'country' },
+    { title: 'Skin', name: 'skin' }
+  ];
+
+  public rows: Array<any> = [];
+
   constructor() {
     this.progressValue = 0;
   }
@@ -25,7 +42,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   public startLearning(): void {
-    if(this.progressValue >= 100) {
+    if (this.progressValue >= 100) {
       return;
     }
 
