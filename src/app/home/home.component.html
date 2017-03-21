@@ -23,7 +23,7 @@
 </div>
 
 <div *ngIf="isModalShown" [config]="{ show: true }" (onHidden)="onHidden()" bsModal #autoShownModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title pull-left">Auto shown modal</h4>
@@ -33,8 +33,36 @@
       </div>
       <div class="modal-body">
         <p>Decide!</p>
-        <!-- <ng-table [config]="config" [rows]="rows" [columns]="columns">
-        </ng-table> -->
+        <table class="table table-striped" [mfData]="rows" #mf="mfDataTable" mfRowsOnPage="10">
+          <thead>
+            <tr>
+              <th style="width: 10%">
+                <mfDefaultSorter by="age">Age</mfDefaultSorter>
+              </th>
+              <th style="width: 20%">
+                <mfDefaultSorter by="zip">ZIP Code</mfDefaultSorter>
+              </th>
+              <th style="width: 15%">
+                <mfDefaultSorter by="gender">Gender</mfDefaultSorter>
+              </th>
+              <th style="width: 25%">
+                <mfDefaultSorter by="country">Country</mfDefaultSorter>
+              </th>
+              <th style="width: 30%">
+                <mfDefaultSorter by="skin">Skin</mfDefaultSorter>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of mf.data">
+              <td>{{item.age}}</td>
+              <td>{{item.zip}}</td>
+              <td>{{item.gender}}</td>
+              <td>{{item.country}}</td>
+              <td>{{item.skin}}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

@@ -8,6 +8,8 @@ import { AlertModule } from 'ng2-bootstrap';
 import { ProgressbarModule } from 'ng2-bootstrap/progressbar';
 import { ModalModule } from 'ng2-bootstrap/modal';
 
+import { DataTableModule } from "angular2-datatable";
+
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { ThemeComponent } from './theme/theme.component';
@@ -32,7 +34,8 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     AlertModule.forRoot(),
     ProgressbarModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    DataTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]

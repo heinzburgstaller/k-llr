@@ -19,26 +19,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   public autoShownModal: ModalDirective;
   public isModalShown: boolean = false;
 
-  public config: any = {
-    paging: false,
-    className: ['table-striped', 'table-bordered']
-  };
-
-  public columns: Array<any> = [
-    { title: 'Age', name: 'age' },
-    { title: 'ZIP', name: 'zip' },
-    { title: 'Gender', name: 'gender' },
-    { title: 'Country', name: 'country' },
-    { title: 'Skin', name: 'skin' }
-  ];
-
-  public rows: Array<any> = [];
+  public rows: Array<any> = DataArray1;
 
   constructor() {
     this.progressValue = 0;
   }
 
   ngOnInit() {
+    console.log(this.rows);
   }
 
   public startLearning(): void {
