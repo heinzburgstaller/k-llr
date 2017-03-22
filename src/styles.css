@@ -48,7 +48,5 @@ body {
 }
 
 .alert-warning {
-  background-color: #fffe80;
-  border-color: #d2ca00;
-  color: inherit;
+  color: #333;
 }
