@@ -18,11 +18,11 @@
       </thead>
       <tbody>
         <tr *ngFor="let item of mf.data">
-          <td [class.bold]="ageSelected">{{item.age}}</td>
-          <td [class.bold]="zipSelected">{{item.zip}}</td>
-          <td [class.bold]="genderSelected">{{item.gender}}</td>
-          <td [class.bold]="countrySelected">{{item.country}}</td>
-          <td [class.bold]="skinSelected">{{item.skin}}</td>
+          <td [ngClass]="{'success bold': ageSelected }">{{item.age}}</td>
+          <td [ngClass]="{'success bold': zipSelected }">{{item.zip}}</td>
+          <td [ngClass]="{'success bold': genderSelected }">{{item.gender}}</td>
+          <td [ngClass]="{'success bold': countrySelected }">{{item.country}}</td>
+          <td [ngClass]="{'success bold': skinSelected }">{{item.skin}}</td>
           <td>{{item.disease}}</td>
         </tr>
       </tbody>
