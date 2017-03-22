@@ -32,77 +32,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="alert alert-success" role="alert">
-          <strong>Decide!</strong> Which anonymization fits better?
-        </div>
-
-        <div class="page-header">
-          <h4>Anonymization A</h4>
-        </div>
-        <table class="table table-striped" [mfData]="rows" #mf="mfDataTable">
-          <thead>
-            <tr>
-              <th style="width: 10%">
-                <mfDefaultSorter by="age">Age</mfDefaultSorter>
-              </th>
-              <th style="width: 20%">
-                <mfDefaultSorter by="zip">ZIP Code</mfDefaultSorter>
-              </th>
-              <th style="width: 15%">
-                <mfDefaultSorter by="gender">Gender</mfDefaultSorter>
-              </th>
-              <th style="width: 25%">
-                <mfDefaultSorter by="country">Country</mfDefaultSorter>
-              </th>
-              <th style="width: 30%">
-                <mfDefaultSorter by="skin">Skin</mfDefaultSorter>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of mf.data">
-              <td>{{item.age}}</td>
-              <td>{{item.zip}}</td>
-              <td>{{item.gender}}</td>
-              <td>{{item.country}}</td>
-              <td>{{item.skin}}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="page-header">
-          <h4>Anonymization B</h4>
-        </div>
-        <table class="table table-striped" [mfData]="rows" #mf2="mfDataTable">
-          <thead>
-            <tr>
-              <th style="width: 10%">
-                <mfDefaultSorter by="age">Age</mfDefaultSorter>
-              </th>
-              <th style="width: 20%">
-                <mfDefaultSorter by="zip">ZIP Code</mfDefaultSorter>
-              </th>
-              <th style="width: 15%">
-                <mfDefaultSorter by="gender">Gender</mfDefaultSorter>
-              </th>
-              <th style="width: 25%">
-                <mfDefaultSorter by="country">Country</mfDefaultSorter>
-              </th>
-              <th style="width: 30%">
-                <mfDefaultSorter by="skin">Skin</mfDefaultSorter>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of mf2.data">
-              <td>{{item.age}}</td>
-              <td>{{item.zip}}</td>
-              <td>{{item.gender}}</td>
-              <td>{{item.country}}</td>
-              <td>{{item.skin}}</td>
-            </tr>
-          </tbody>
-        </table>
+        <app-interactive></app-interactive>
       </div>
     </div>
   </div>

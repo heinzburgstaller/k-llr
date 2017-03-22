@@ -13,6 +13,7 @@ import { DataTableModule } from "angular2-datatable";
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { ThemeComponent } from './theme/theme.component';
+import { InteractiveComponent } from './interactive/interactive.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -25,7 +26,8 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     HomeComponent,
-    ThemeComponent
+    ThemeComponent,
+    InteractiveComponent
   ],
   imports: [
     BrowserModule,

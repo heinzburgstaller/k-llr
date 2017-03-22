@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { ModalDirective } from 'ng2-bootstrap/modal';
-
-import { DataArray1 } from './data';
+import { InteractiveComponent } from '../interactive/interactive.component';
 
 @Component({
   selector: 'app-home',
@@ -19,14 +18,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   public autoShownModal: ModalDirective;
   public isModalShown: boolean = false;
 
-  public rows: Array<any> = DataArray1;
-
   constructor() {
     this.progressValue = 0;
   }
 
   ngOnInit() {
-    console.log(this.rows);
   }
 
   public startLearning(): void {
