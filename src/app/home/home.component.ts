@@ -36,7 +36,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     this.timer = Observable.timer(1500);
-    // subscribing to a observable returns a subscription object
     this.sub = this.timer.subscribe(t => this.tickerFunc(t));
   }
 
@@ -60,13 +59,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public onShown(): void {
-    console.log(this.interactive);
     this.interactive.setIndex(this.progressValue / 20 - 1);
   }
 
   public onHidden(): void {
     this.isModalShown = false;
-    console.log(this.interactive);
   }
 
   ngOnDestroy() {
