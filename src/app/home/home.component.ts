@@ -57,6 +57,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public onShown(): void {
     console.log(this.interactive);
+    this.interactive.setIndex(this.progressValue / 20 - 1);
   }
 
   public onHidden(): void {

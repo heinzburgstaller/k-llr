@@ -8,11 +8,21 @@ import { DataArray1 } from './data';
 })
 export class InteractiveComponent implements OnInit {
 
-  public rows: Array<any> = DataArray1;
+  public rows: Array<any> = [];
+
+  public ageSelected: boolean = false;
+  public zipSelected: boolean = false;
+  public genderSelected: boolean = false;
+  public countrySelected: boolean = false;
+  public skinelected: boolean = false;
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  setIndex(index:number):void {
+    this.rows = [DataArray1[index]];
   }
 
 }

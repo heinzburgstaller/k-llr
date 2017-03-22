@@ -11,61 +11,42 @@
       <th style="width: 10%">
         <mfDefaultSorter by="age">Age</mfDefaultSorter>
       </th>
-      <th style="width: 20%">
+      <th style="width: 15%">
         <mfDefaultSorter by="zip">ZIP Code</mfDefaultSorter>
       </th>
       <th style="width: 15%">
         <mfDefaultSorter by="gender">Gender</mfDefaultSorter>
       </th>
-      <th style="width: 25%">
+      <th style="width: 20%">
         <mfDefaultSorter by="country">Country</mfDefaultSorter>
       </th>
-      <th style="width: 30%">
+      <th style="width: 20%">
         <mfDefaultSorter by="skin">Skin</mfDefaultSorter>
+      </th>
+      <th style="width: 20%">
+        <mfDefaultSorter by="disease">Disease</mfDefaultSorter>
       </th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let item of mf.data">
-      <td>{{item.age}}</td>
-      <td>{{item.zip}}</td>
-      <td>{{item.gender}}</td>
-      <td>{{item.country}}</td>
-      <td>{{item.skin}}</td>
+      <td [class.bold]="ageSelected">{{item.age}}</td>
+      <td [class.bold]="zipSelected">{{item.zip}}</td>
+      <td [class.bold]="genderSelected">{{item.gender}}</td>
+      <td [class.bold]="countrySelected">{{item.country}}</td>
+      <td [class.bold]="skinSelected">{{item.skin}}</td>
+      <td>{{item.disease}}</td>
     </tr>
   </tbody>
-</table>
-
-<div class="page-header">
-  <h4>Anonymization B</h4>
-</div>
-<table class="table table-striped" [mfData]="rows" #mf2="mfDataTable">
-  <thead>
+  <tfoot>
     <tr>
-      <th style="width: 10%">
-        <mfDefaultSorter by="age">Age</mfDefaultSorter>
-      </th>
-      <th style="width: 20%">
-        <mfDefaultSorter by="zip">ZIP Code</mfDefaultSorter>
-      </th>
-      <th style="width: 15%">
-        <mfDefaultSorter by="gender">Gender</mfDefaultSorter>
-      </th>
-      <th style="width: 25%">
-        <mfDefaultSorter by="country">Country</mfDefaultSorter>
-      </th>
-      <th style="width: 30%">
-        <mfDefaultSorter by="skin">Skin</mfDefaultSorter>
-      </th>
+      <td><input type="checkbox" [(ngModel)]="ageSelected"></td>
+      <td><input type="checkbox" [(ngModel)]="zipSelected"></td>
+      <td><input type="checkbox" [(ngModel)]="genderSelected"></td>
+      <td><input type="checkbox" [(ngModel)]="countrySelected"></td>
+      <td><input type="checkbox" [(ngModel)]="skinSelected"></td>
+      <td>Influences</td>
+      <td></td>
     </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let item of mf2.data">
-      <td>{{item.age}}</td>
-      <td>{{item.zip}}</td>
-      <td>{{item.gender}}</td>
-      <td>{{item.country}}</td>
-      <td>{{item.skin}}</td>
-    </tr>
-  </tbody>
+  </tfoot>
 </table>
