@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { InteractiveComponent } from '../interactive/interactive.component';
@@ -8,7 +8,7 @@ import { InteractiveComponent } from '../interactive/interactive.component';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private timer;
   private sub: Subscription;
@@ -17,12 +17,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('autoShownModal')
   public autoShownModal: ModalDirective;
   public isModalShown: boolean = false;
+  @ViewChild(InteractiveComponent)
+  public interactive: InteractiveComponent;
 
   constructor() {
     this.progressValue = 0;
   }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
   }
 
   public startLearning(): void {
@@ -44,6 +49,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   public showModal(): void {
     this.isModalShown = true;
+    console.log(this.interactive);
   }
 
   public hideModal(): void {
@@ -53,6 +59,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   public onHidden(): void {
     this.isModalShown = false;
+    console.log(this.interactive);
   }
 
   ngOnDestroy() {
