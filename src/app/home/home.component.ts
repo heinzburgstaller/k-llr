@@ -43,18 +43,20 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   tickerFunc(tick) {
     this.progressValue += 20;
     this.sub.unsubscribe();
-
     this.showModal();
   }
 
   public showModal(): void {
     this.isModalShown = true;
-    console.log(this.interactive);
   }
 
   public hideModal(): void {
     this.autoShownModal.hide();
     this.startLearning();
+  }
+
+  public onShown(): void {
+    console.log(this.interactive);
   }
 
   public onHidden(): void {
