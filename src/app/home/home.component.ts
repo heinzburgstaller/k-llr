@@ -50,6 +50,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isModalShown = true;
   }
 
+  onInteractiveOk() {
+    this.hideModal();
+  }
+
   public hideModal(): void {
     this.autoShownModal.hide();
     this.startLearning();

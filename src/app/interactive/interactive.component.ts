@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { DataArray1 } from './data';
 
 @Component({
@@ -16,13 +16,19 @@ export class InteractiveComponent implements OnInit {
   public countrySelected: boolean = false;
   public skinelected: boolean = false;
 
+  @Output() onOk = new EventEmitter<any>();
+
   constructor() { }
 
   ngOnInit() {
   }
 
-  setIndex(index:number):void {
+  setIndex(index: number): void {
     this.rows = [DataArray1[index]];
+  }
+
+  public ok(): void {
+    this.onOk.emit();
   }
 
 }
