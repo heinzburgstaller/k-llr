@@ -16,6 +16,8 @@ import { ThemeComponent } from './theme/theme.component';
 import { InteractiveComponent } from './interactive/interactive.component';
 import { ChooseAnonComponent } from './choose-anon/choose-anon.component';
 
+import { DragulaModule } from 'ng2-dragula';
+
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'theme', component: ThemeComponent },
@@ -40,7 +42,8 @@ const routes: Routes = [
     AlertModule.forRoot(),
     ProgressbarModule.forRoot(),
     ModalModule.forRoot(),
-    DataTableModule
+    DataTableModule,
+    DragulaModule
   ],
   providers: [],
   bootstrap: [AppComponent]
