@@ -50,3 +50,7 @@ body {
 .alert-warning {
   color: #333;
 }
+
+.arrow-center {
+  text-align: center;
+}

@@ -14,10 +14,12 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { ThemeComponent } from './theme/theme.component';
 import { InteractiveComponent } from './interactive/interactive.component';
+import { ChooseAnonComponent } from './choose-anon/choose-anon.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'theme', component: ThemeComponent },
+  { path: 'choose-anon', component: ChooseAnonComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
@@ -27,7 +29,8 @@ const routes: Routes = [
     AppComponent,
     HomeComponent,
     ThemeComponent,
-    InteractiveComponent
+    InteractiveComponent,
+    ChooseAnonComponent
   ],
   imports: [
     BrowserModule,
