@@ -18,6 +18,8 @@ import { ChooseAnonComponent } from './choose-anon/choose-anon.component';
 
 import { DragulaModule } from 'ng2-dragula';
 
+import { GaugeModule } from 'ng2-kw-gauge';
+
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'theme', component: ThemeComponent },
@@ -43,7 +45,8 @@ const routes: Routes = [
     ProgressbarModule.forRoot(),
     ModalModule.forRoot(),
     DataTableModule,
-    DragulaModule
+    DragulaModule,
+    GaugeModule
   ],
   providers: [],
   bootstrap: [AppComponent]
