@@ -2,6 +2,7 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { DataArray1 } from './data';
 import { Adult } from './adult';
+import { GaugeSegment, GaugeLabel } from 'ng2-kw-gauge';
 
 @Component({
   selector: 'app-interactive',
@@ -10,22 +11,43 @@ import { Adult } from './adult';
 })
 export class InteractiveComponent implements OnInit {
 
+  public colors: any = {
+    indigo: '#14143e',
+    pink: '#fd1c49',
+    orange: '#ff6e00',
+    yellow: '#f0c800',
+    mint: '#00efab',
+    cyan: '#05d1ff',
+    purple: '#841386',
+    white: '#fff'
+  };
+
   private csvUrl: string = 'original_data_500_rows.csv';
   private adults: Array<Adult> = [];
-
-  public rows: Array<any> = [];
-  public ageSelected: boolean = false;
-  public zipSelected: boolean = false;
-  public genderSelected: boolean = false;
-  public countrySelected: boolean = false;
-  public skinelected: boolean = false;
+  public option1Rows: Array<Adult> = [];
+  public option2Rows: Array<Adult> = [];
+  public decideRows: Array<Adult> = [];
 
   @Output() onOk = new EventEmitter<any>();
 
-  constructor(private http: Http) { }
+  constructor(private http: Http) {
+
+  }
 
   ngOnInit() {
     this.readCsvData();
+  }
+
+  public dragEnter(event: any) {
+    console.log(event);
+    this.progressGraph1.segments[0].value = 55;
+    this.progressGraph1.labels[1].text = '55%';
+  }
+
+  public dragDrop(event: any) {
+    console.log(event);
+    this.progressGraph1.segments[0].value = 100;
+    this.progressGraph1.labels[1].text = '100%';
   }
 
   private readCsvData() {
@@ -61,6 +83,13 @@ export class InteractiveComponent implements OnInit {
         this.adults.push(a);
       }
     }
+
+    this.option1Rows = [this.adults[0], this.adults[1], this.adults[2]];
+    this.option2Rows = [this.adults[0], this.adults[1], this.adults[2]];
+    this.decideRows = [this.adults[3]];
+
+    this.progressGraph1.segments[0].value = 10;
+    this.progressGraph1.labels[1].text = '10%';
   }
 
   private handleError(error: any) {
@@ -72,12 +101,44 @@ export class InteractiveComponent implements OnInit {
     return errMsg;
   }
 
+  // TODO not needed anymore
   setIndex(index: number): void {
-    this.rows = [DataArray1[index]];
+
   }
 
   public ok(): void {
     this.onOk.emit();
   }
+
+  public progressGraph1: any = {
+    bgRadius: 60,
+    bgColor: this.colors.indigo,
+    rounded: true,
+    reverse: false,
+    animationSecs: 1,
+    labels: [
+      new GaugeLabel({
+        color: this.colors.white,
+        text: 'Cost',
+        x: 0,
+        y: 20,
+        fontSize: '1em'
+      }),
+      new GaugeLabel({
+        color: this.colors.pink,
+        text: '81%',
+        x: 0,
+        y: 0,
+        fontSize: '2em'
+      })
+    ],
+    segments: [
+      new GaugeSegment({
+        value: 81,
+        color: this.colors.pink,
+        borderWidth: 20
+      })
+    ]
+  };
 
 }

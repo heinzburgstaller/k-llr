@@ -2,41 +2,125 @@
 
   <div class="modal-body">
     <div class="alert alert-warning" role="alert">
-      <strong>Decide!</strong> Check the columns which are important for the disease.
+      <strong>Decide!</strong> Which anonymisation fits better? Drag the Entry to
+      your favoured option.
+    </div>
+    <div class="row">
+      <div class="col-xs-10">
+        <div>
+          <h4>Option 1</h4>
+          <table dnd-droppable class="table table-bordered" [mfData]="option1Rows" #mf1="mfDataTable"
+              (onDragEnter)="dragEnter($event)" (onDropSuccess)="dragDrop($event)">
+            <thead>
+              <tr>
+                <th style="width: 5%">Age</th>
+                <th style="width: 5%">Edu.</th>
+                <th style="width: 5%">h/week</th>
+                <th style="width: 15%">Native Country</th>
+                <th style="width: 5%">Sex</th>
+                <th style="width: 15%">Relationship</th>
+                <th style="width: 15%">Occupation</th>
+                <th style="width: 10%">Income</th>
+                <th style="width: 10%">Race</th>
+                <th style="width: 15%">Marital status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mf1.data">
+                <td style="text-align: right">{{item.age}}</td>
+                <td style="text-align: right">{{item.education_num}}</td>
+                <td style="text-align: right">{{item.hours_per_week}}</td>
+                <td>{{item.native_country}}</td>
+                <td>{{item.sex}}</td>
+                <td>{{item.relationship}}</td>
+                <td>{{item.occupation}}</td>
+                <td>{{item.income}}</td>
+                <td>{{item.race}}</td>
+                <td>{{item.marital_status}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-xs-2">
+        <ng2-kw-gauge [bgRadius]=progressGraph1.bgRadius [bgColor]=progressGraph1.bgColor
+            [rounded]=progressGraph1.rounded [reverse]=progressGraph1.reverse [animationSecs]=progressGraph1.animationSecs
+            [labels]=progressGraph1.labels [segments]=progressGraph1.segments>
+        </ng2-kw-gauge>
+      </div>
     </div>
 
-    <table class="table table-striped" [mfData]="rows" #mf="mfDataTable">
-      <thead>
-        <tr>
-          <th style="width: 10%">Age</th>
-          <th style="width: 15%">ZIP Code</th>
-          <th style="width: 15%">Gender</th>
-          <th style="width: 20%">Country</th>
-          <th style="width: 15%">Skin</th>
-          <th style="width: 25%">Disease [Target Column]</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of mf.data">
-          <td [ngClass]="{'success bold': ageSelected }">{{item.age}}</td>
-          <td [ngClass]="{'success bold': zipSelected }">{{item.zip}}</td>
-          <td [ngClass]="{'success bold': genderSelected }">{{item.gender}}</td>
-          <td [ngClass]="{'success bold': countrySelected }">{{item.country}}</td>
-          <td [ngClass]="{'success bold': skinSelected }">{{item.skin}}</td>
-          <td class="danger bold">{{item.disease}}</td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td><input type="checkbox" [(ngModel)]="ageSelected"></td>
-          <td><input type="checkbox" [(ngModel)]="zipSelected"></td>
-          <td><input type="checkbox" [(ngModel)]="genderSelected"></td>
-          <td><input type="checkbox" [(ngModel)]="countrySelected"></td>
-          <td><input type="checkbox" [(ngModel)]="skinSelected"></td>
-          <td></td>
-        </tr>
-      </tfoot>
-    </table>
+    <div class="row">
+      <div class="col-xs-10">
+        <div class="arrow-center"><span class="glyphicon glyphicon-arrow-up"></span></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-10">
+        <table dnd-draggable [dragEnabled]="true" class="table table-striped" [mfData]="decideRows"
+            #mfDecide="mfDataTable">
+          <tbody>
+            <tr *ngFor="let item of mfDecide.data">
+              <td style="width: 5%; text-align: right">{{item.age}}</td>
+              <td style="width: 5%; text-align: right">{{item.education_num}}</td>
+              <td style="width: 5%; text-align: right">{{item.hours_per_week}}</td>
+              <td style="width: 15%">{{item.native_country}}</td>
+              <td style="width: 5%">{{item.sex}}</td>
+              <td style="width: 15%">{{item.relationship}}</td>
+              <td style="width: 15%">{{item.occupation}}</td>
+              <td style="width: 10%">{{item.income}}</td>
+              <td style="width: 10%">{{item.race}}</td>
+              <td style="width: 15%">{{item.marital_status}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-10">
+        <div class="arrow-center"><span class="glyphicon glyphicon-arrow-down"></span></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-10">
+        <div>
+          <h4>Option 2</h4>
+          <table class="table table-bordered" [mfData]="option2Rows" #mf2="mfDataTable">
+            <thead>
+              <tr>
+                <th style="width: 5%">Age</th>
+                <th style="width: 5%">Edu.</th>
+                <th style="width: 5%">h/week</th>
+                <th style="width: 15%">Native Country</th>
+                <th style="width: 5%">Sex</th>
+                <th style="width: 15%">Relationship</th>
+                <th style="width: 15%">Occupation</th>
+                <th style="width: 10%">Income</th>
+                <th style="width: 10%">Race</th>
+                <th style="width: 15%">Marital status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mf2.data">
+                <td style="text-align: right">{{item.age}}</td>
+                <td style="text-align: right">{{item.education_num}}</td>
+                <td style="text-align: right">{{item.hours_per_week}}</td>
+                <td>{{item.native_country}}</td>
+                <td>{{item.sex}}</td>
+                <td>{{item.relationship}}</td>
+                <td>{{item.occupation}}</td>
+                <td>{{item.income}}</td>
+                <td>{{item.race}}</td>
+                <td>{{item.marital_status}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="modal-footer">

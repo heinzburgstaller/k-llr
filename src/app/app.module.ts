@@ -20,10 +20,12 @@ import { DragulaModule } from 'ng2-dragula';
 
 import { GaugeModule } from 'ng2-kw-gauge';
 
+import { DndModule } from 'ng2-dnd';
+
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'theme', component: ThemeComponent },
-  { path: 'choose-anon', component: ChooseAnonComponent},
+  { path: 'choose-anon', component: ChooseAnonComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
@@ -46,7 +48,8 @@ const routes: Routes = [
     ModalModule.forRoot(),
     DataTableModule,
     DragulaModule,
-    GaugeModule
+    GaugeModule,
+    DndModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
