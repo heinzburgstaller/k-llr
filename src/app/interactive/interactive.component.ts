@@ -38,7 +38,13 @@ export class InteractiveComponent implements OnInit {
     this.readCsvData();
   }
 
-  public dragEnter(event: any) {
+  public dragLeave(event: any) {
+    console.log(event);
+    this.progressGraph1.segments[0].value = 10;
+    this.progressGraph1.labels[1].text = '10%';
+  }
+
+  public dragOver(event: any) {
     console.log(event);
     this.progressGraph1.segments[0].value = 55;
     this.progressGraph1.labels[1].text = '55%';

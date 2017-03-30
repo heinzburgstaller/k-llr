@@ -10,7 +10,7 @@
         <div>
           <h4>Option 1</h4>
           <table dnd-droppable class="table table-bordered" [mfData]="option1Rows" #mf1="mfDataTable"
-              (onDragEnter)="dragEnter($event)" (onDropSuccess)="dragDrop($event)">
+              (onDragLeave)="dragLeave($event)" (onDragOver)="dragOver($event)" (onDropSuccess)="dragDrop($event)">
             <thead>
               <tr>
                 <th style="width: 5%">Age</th>
