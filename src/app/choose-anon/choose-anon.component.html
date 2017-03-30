@@ -4,72 +4,72 @@
     <div class="alert alert-warning" role="alert">
       <strong>Decide!</strong> Which anonymisation fits better? Drag the Entry to your favoured option.
     </div>
-
-    <h4>Option 1</h4>
-    <table class="table table-bordered" [mfData]="rows" #mf="mfDataTable">
-      <thead>
-        <tr>
-          <th style="width: 10%">Age</th>
-          <th style="width: 15%">ZIP Code</th>
-          <th style="width: 15%">Gender</th>
-          <th style="width: 20%">Country</th>
-          <th style="width: 15%">Skin</th>
-          <th style="width: 25%">Disease [Target Column]</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of mf.data">
-          <td [ngClass]="{'success bold': ageSelected }">{{item.age}}</td>
-          <td [ngClass]="{'success bold': zipSelected }">{{item.zip}}</td>
-          <td [ngClass]="{'success bold': genderSelected }">{{item.gender}}</td>
-          <td [ngClass]="{'success bold': countrySelected }">{{item.country}}</td>
-          <td [ngClass]="{'success bold': skinSelected }">{{item.skin}}</td>
-          <td style="width: 25%" [ngClass]="{'success bold': disease}">{{item.disease}}</td>
-        </tr>
-      </tbody>
-    </table>
-
+    <div [dragula]='"first-bag"'>
+      <h4>Option 1</h4>
+      <table class="table table-bordered" [mfData]="rows" #mf="mfDataTable">
+        <thead>
+          <tr>
+            <th style="width: 10%">Age</th>
+            <th style="width: 15%">ZIP Code</th>
+            <th style="width: 15%">Gender</th>
+            <th style="width: 20%">Country</th>
+            <th style="width: 15%">Skin</th>
+            <th style="width: 25%">Disease [Target Column]</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of mf.data">
+            <td [ngClass]="{'success bold': ageSelected }">{{item.age}}</td>
+            <td [ngClass]="{'success bold': zipSelected }">{{item.zip}}</td>
+            <td [ngClass]="{'success bold': genderSelected }">{{item.gender}}</td>
+            <td [ngClass]="{'success bold': countrySelected }">{{item.country}}</td>
+            <td [ngClass]="{'success bold': skinSelected }">{{item.skin}}</td>
+            <td style="width: 25%" [ngClass]="{'success bold': disease}">{{item.disease}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <div class="arrow-center"><span class="glyphicon glyphicon-arrow-up"></span></div>
-    <h4>Entry</h4>
-    <table class="table table-striped" [mfData]="rows" #mf="mfDataTable">
+    <div [dragula]='"first-bag"'>
+      <table class="table table-striped" [mfData]="rows" #mf="mfDataTable">
 
-      <tbody>
-        <tr *ngFor="let item of mf.data">
-          <td style="width: 10%" [ngClass]="{'success bold': ageSelected }">{{item.age}}</td>
-          <td style="width: 15%" [ngClass]="{'success bold': zipSelected }">{{item.zip}}</td>
-          <td style="width: 15%" [ngClass]="{'success bold': genderSelected }">{{item.gender}}</td>
-          <td style="width: 20%" [ngClass]="{'success bold': countrySelected }">{{item.country}}</td>
-          <td style="width: 15%" [ngClass]="{'success bold': skinSelected }">{{item.skin}}</td>
-          <td style="width: 25%" [ngClass]="{'success bold': disease}">{{item.disease}}</td>
-        </tr>
-      </tbody>
-    </table>
-
+        <tbody>
+          <tr *ngFor="let item of mf.data">
+            <td style="width: 10%" [ngClass]="{'success bold': ageSelected }">{{item.age}}</td>
+            <td style="width: 15%" [ngClass]="{'success bold': zipSelected }">{{item.zip}}</td>
+            <td style="width: 15%" [ngClass]="{'success bold': genderSelected }">{{item.gender}}</td>
+            <td style="width: 20%" [ngClass]="{'success bold': countrySelected }">{{item.country}}</td>
+            <td style="width: 15%" [ngClass]="{'success bold': skinSelected }">{{item.skin}}</td>
+            <td style="width: 25%" [ngClass]="{'success bold': disease}">{{item.disease}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <div class="arrow-center"><span class="glyphicon glyphicon-arrow-down"></span></div>
-
-    <h4>Option 2</h4>
-    <table class="table table-bordered" [mfData]="rows" #mf="mfDataTable">
-      <thead>
-        <tr>
-          <th style="width: 10%">Age</th>
-          <th style="width: 15%">ZIP Code</th>
-          <th style="width: 15%">Gender</th>
-          <th style="width: 20%">Country</th>
-          <th style="width: 15%">Skin</th>
-          <th style="width: 25%">Disease [Target Column]</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of mf.data">
-          <td [ngClass]="{'success bold': ageSelected }">{{item.age}}</td>
-          <td [ngClass]="{'success bold': zipSelected }">{{item.zip}}</td>
-          <td [ngClass]="{'success bold': genderSelected }">{{item.gender}}</td>
-          <td [ngClass]="{'success bold': countrySelected }">{{item.country}}</td>
-          <td [ngClass]="{'success bold': skinSelected }">{{item.skin}}</td>
-          <td style="width: 25%" [ngClass]="{'success bold': disease}">{{item.disease}}</td>
-        </tr>
-      </tbody>
-    </table>
-
+    <div [dragula]='"first-bag"'>
+      <h4>Option 2</h4>
+      <table class="table table-bordered" [mfData]="rows" #mf="mfDataTable">
+        <thead>
+          <tr>
+            <th style="width: 10%">Age</th>
+            <th style="width: 15%">ZIP Code</th>
+            <th style="width: 15%">Gender</th>
+            <th style="width: 20%">Country</th>
+            <th style="width: 15%">Skin</th>
+            <th style="width: 25%">Disease [Target Column]</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of mf.data">
+            <td [ngClass]="{'success bold': ageSelected }">{{item.age}}</td>
+            <td [ngClass]="{'success bold': zipSelected }">{{item.zip}}</td>
+            <td [ngClass]="{'success bold': genderSelected }">{{item.gender}}</td>
+            <td [ngClass]="{'success bold': countrySelected }">{{item.country}}</td>
+            <td [ngClass]="{'success bold': skinSelected }">{{item.skin}}</td>
+            <td style="width: 25%" [ngClass]="{'success bold': disease}">{{item.disease}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
