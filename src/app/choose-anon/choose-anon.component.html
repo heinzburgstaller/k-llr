@@ -4,7 +4,7 @@
     <div class="alert alert-warning" role="alert">
       <strong>Decide!</strong> Which anonymisation fits better? Drag the Entry to your favoured option.
     </div>
-    <div [dragula]='"first-bag"'>
+    <div ng-attr-id="AAAAA">
       <h4>Option 1</h4>
       <table class="table table-bordered" [mfData]="rows" #mf="mfDataTable">
         <thead>
@@ -30,7 +30,7 @@
       </table>
     </div>
     <div class="arrow-center"><span class="glyphicon glyphicon-arrow-up"></span></div>
-    <div [dragula]='"first-bag"'>
+    <div [dragula]='"first-bag"' ng-attr-id="BBBBB">
       <table class="table table-striped" [mfData]="rows" #mf="mfDataTable">
 
         <tbody>
@@ -46,7 +46,7 @@
       </table>
     </div>
     <div class="arrow-center"><span class="glyphicon glyphicon-arrow-down"></span></div>
-    <div [dragula]='"first-bag"'>
+    <div ng-attr-id="CCCCC">
       <h4>Option 2</h4>
       <table class="table table-bordered" [mfData]="rows" #mf="mfDataTable">
         <thead>
