@@ -9,8 +9,9 @@
       <div class="col-xs-10">
         <div>
           <h4>Option 1</h4>
-          <table dnd-droppable class="table table-bordered" [mfData]="option1Rows" #mf1="mfDataTable"
-              (onDragLeave)="dragLeave($event)" (onDragOver)="dragOver($event)" (onDropSuccess)="dragDrop($event)">
+          <table dnd-droppable class="table table-striped" [mfData]="option1Rows" #mf1="mfDataTable"
+              (onDragStart)="dragStart($event)" (onDragLeave)="dragLeave($event)" (onDragOver)="dragOverOption1($event)"
+              (onDropSuccess)="dragDropOption1($event)">
             <thead>
               <tr>
                 <th style="width: 5%">Age</th>
@@ -38,6 +39,18 @@
                 <td>{{item.race}}</td>
                 <td>{{item.marital_status}}</td>
               </tr>
+              <tr *ngFor="let item of decidedRows1" class="success" dnd-draggable>
+                <td style="text-align: right">{{item.age}}</td>
+                <td style="text-align: right">{{item.education_num}}</td>
+                <td style="text-align: right">{{item.hours_per_week}}</td>
+                <td>{{item.native_country}}</td>
+                <td>{{item.sex}}</td>
+                <td>{{item.relationship}}</td>
+                <td>{{item.occupation}}</td>
+                <td>{{item.income}}</td>
+                <td>{{item.race}}</td>
+                <td>{{item.marital_status}}</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -50,37 +63,38 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-xs-10">
-        <div class="arrow-center"><span class="glyphicon glyphicon-arrow-up"></span></div>
+    <div *ngIf="decideRows.length > 0">
+      <div class="row">
+        <div class="col-xs-10">
+          <div class="arrow-center"><span class="glyphicon glyphicon-arrow-up"></span></div>
+        </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-xs-10">
-        <table dnd-draggable [dragEnabled]="true" class="table table-striped" [mfData]="decideRows"
-            #mfDecide="mfDataTable">
-          <tbody>
-            <tr *ngFor="let item of mfDecide.data">
-              <td style="width: 5%; text-align: right">{{item.age}}</td>
-              <td style="width: 5%; text-align: right">{{item.education_num}}</td>
-              <td style="width: 5%; text-align: right">{{item.hours_per_week}}</td>
-              <td style="width: 15%">{{item.native_country}}</td>
-              <td style="width: 5%">{{item.sex}}</td>
-              <td style="width: 15%">{{item.relationship}}</td>
-              <td style="width: 15%">{{item.occupation}}</td>
-              <td style="width: 10%">{{item.income}}</td>
-              <td style="width: 10%">{{item.race}}</td>
-              <td style="width: 15%">{{item.marital_status}}</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="row">
+        <div class="col-xs-10">
+          <table dnd-draggable [dragEnabled]="true" class="table" [mfData]="decideRows" #mfDecide="mfDataTable">
+            <tbody>
+              <tr *ngFor="let item of mfDecide.data" class="success">
+                <td style="width: 5%; text-align: right">{{item.age}}</td>
+                <td style="width: 5%; text-align: right">{{item.education_num}}</td>
+                <td style="width: 5%; text-align: right">{{item.hours_per_week}}</td>
+                <td style="width: 15%">{{item.native_country}}</td>
+                <td style="width: 5%">{{item.sex}}</td>
+                <td style="width: 15%">{{item.relationship}}</td>
+                <td style="width: 15%">{{item.occupation}}</td>
+                <td style="width: 10%">{{item.income}}</td>
+                <td style="width: 10%">{{item.race}}</td>
+                <td style="width: 15%">{{item.marital_status}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-xs-10">
-        <div class="arrow-center"><span class="glyphicon glyphicon-arrow-down"></span></div>
+      <div class="row">
+        <div class="col-xs-10">
+          <div class="arrow-center"><span class="glyphicon glyphicon-arrow-down"></span></div>
+        </div>
       </div>
     </div>
 
@@ -88,7 +102,9 @@
       <div class="col-xs-10">
         <div>
           <h4>Option 2</h4>
-          <table class="table table-bordered" [mfData]="option2Rows" #mf2="mfDataTable">
+          <table dnd-droppable class="table table-striped" [mfData]="option2Rows" #mf2="mfDataTable"
+              (onDragStart)="dragStart($event)" (onDragLeave)="dragLeave($event)" (onDragOver)="dragOverOption2($event)"
+              (onDropSuccess)="dragDropOption2($event)">
             <thead>
               <tr>
                 <th style="width: 5%">Age</th>
@@ -105,6 +121,18 @@
             </thead>
             <tbody>
               <tr *ngFor="let item of mf2.data">
+                <td style="text-align: right">{{item.age}}</td>
+                <td style="text-align: right">{{item.education_num}}</td>
+                <td style="text-align: right">{{item.hours_per_week}}</td>
+                <td>{{item.native_country}}</td>
+                <td>{{item.sex}}</td>
+                <td>{{item.relationship}}</td>
+                <td>{{item.occupation}}</td>
+                <td>{{item.income}}</td>
+                <td>{{item.race}}</td>
+                <td>{{item.marital_status}}</td>
+              </tr>
+              <tr *ngFor="let item of decidedRows2" class="success" dnd-draggable>
                 <td style="text-align: right">{{item.age}}</td>
                 <td style="text-align: right">{{item.education_num}}</td>
                 <td style="text-align: right">{{item.hours_per_week}}</td>

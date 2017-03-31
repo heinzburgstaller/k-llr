@@ -27,6 +27,9 @@ export class InteractiveComponent implements OnInit {
   public option1Rows: Array<Adult> = [];
   public option2Rows: Array<Adult> = [];
   public decideRows: Array<Adult> = [];
+  public decidedRows1: Array<Adult> = [];
+  public decidedRows2: Array<Adult> = [];
+  private oldCosts: number = 0;
 
   @Output() onOk = new EventEmitter<any>();
 
@@ -38,22 +41,54 @@ export class InteractiveComponent implements OnInit {
     this.readCsvData();
   }
 
+  private setGauge(value: number): void {
+    if (value > 0) {
+      this.progressGraph1.segments[0].value = value;
+      this.progressGraph1.labels[1].text = value + '%';
+    } else {
+      this.progressGraph1.segments[0].value = 0;
+      this.progressGraph1.labels[1].text = 'N/A';
+    }
+  }
+
+  public dragStart(event: any) {
+    this.oldCosts = this.progressGraph1.segments[0].value;
+  }
+
   public dragLeave(event: any) {
-    console.log(event);
-    this.progressGraph1.segments[0].value = 10;
-    this.progressGraph1.labels[1].text = '10%';
+    this.setGauge(this.oldCosts);
   }
 
-  public dragOver(event: any) {
-    console.log(event);
-    this.progressGraph1.segments[0].value = 55;
-    this.progressGraph1.labels[1].text = '55%';
+  public dragOverOption1(event: any) {
+    this.setGauge(74);
   }
 
-  public dragDrop(event: any) {
-    console.log(event);
-    this.progressGraph1.segments[0].value = 100;
-    this.progressGraph1.labels[1].text = '100%';
+  public dragOverOption2(event: any) {
+    this.setGauge(43);
+  }
+
+  public dragDropOption1(event: any) {
+    if (this.decideRows.length > 0) {
+      this.decidedRows1.push(this.decideRows[0]);
+      this.decideRows = [];
+    }
+
+    if (this.decidedRows2.length > 0) {
+      this.decidedRows1.push(this.decidedRows2[0]);
+      this.decidedRows2 = []
+    }
+  }
+
+  public dragDropOption2(event: any) {
+    if (this.decideRows.length > 0) {
+      this.decidedRows2.push(this.decideRows[0]);
+      this.decideRows = [];
+    }
+
+    if (this.decidedRows1.length > 0) {
+      this.decidedRows2.push(this.decidedRows1[0]);
+      this.decidedRows1 = []
+    }
   }
 
   private readCsvData() {
@@ -93,9 +128,7 @@ export class InteractiveComponent implements OnInit {
     this.option1Rows = [this.adults[0], this.adults[1], this.adults[2]];
     this.option2Rows = [this.adults[0], this.adults[1], this.adults[2]];
     this.decideRows = [this.adults[3]];
-
-    this.progressGraph1.segments[0].value = 10;
-    this.progressGraph1.labels[1].text = '10%';
+    this.setGauge(0);
   }
 
   private handleError(error: any) {
@@ -132,7 +165,7 @@ export class InteractiveComponent implements OnInit {
       }),
       new GaugeLabel({
         color: this.colors.pink,
-        text: '81%',
+        text: 'N/A',
         x: 0,
         y: 0,
         fontSize: '2em'
@@ -140,7 +173,7 @@ export class InteractiveComponent implements OnInit {
     ],
     segments: [
       new GaugeSegment({
-        value: 81,
+        value: 0,
         color: this.colors.pink,
         borderWidth: 20
       })
