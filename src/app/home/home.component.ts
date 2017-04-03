@@ -20,6 +20,17 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(InteractiveComponent)
   public interactive: InteractiveComponent;
 
+  public valueAge:number = 50;
+  public valueEducation:number = 50;
+  public valueWorkTime:number = 50;
+  public valueCountry:number = 50;
+  public valueSex:number = 50;
+  public valueRelationship:number = 50;
+  public valueOccupation:number = 50;
+  public valueIncome:number = 50;
+  public valueRace:number = 50;
+  public valueMarital:number = 50;
+
   constructor() {
     this.progressValue = 0;
   }

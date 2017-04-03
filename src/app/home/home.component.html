@@ -5,8 +5,65 @@
   </div>
 
   <div class="row">
+    <div class="col-xs-4">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th style="width: 35%">Column</th>
+            <th style="width: 65%">Manual weight vector</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Age</td>
+            <td><input type="range" min="0" max="100" [(ngModel)]="valueAge"></td>
+          </tr>
+          <tr>
+            <td>Education</td>
+            <td><input type="range" min="0" max="100" [(ngModel)]="valueEducation"></td>
+          </tr>
+          <tr>
+            <td>h/week</td>
+            <td><input type="range" min="0" max="100" [(ngModel)]="valueWorkTime"></td>
+          </tr>
+          <tr>
+            <td>Native Country</td>
+            <td><input type="range" min="0" max="100" [(ngModel)]="valueCountry"></td>
+          </tr>
+          <tr>
+            <td>Sex</td>
+            <td><input type="range" min="0" max="100" [(ngModel)]="valueSex"></td>
+          </tr>
+          <tr>
+            <td>Relationship</td>
+            <td><input type="range" min="0" max="100" [(ngModel)]="valueRelationship"></td>
+          </tr>
+          <tr>
+            <td>Occupation</td>
+            <td><input type="range" min="0" max="100" [(ngModel)]="valueOccupation"></td>
+          </tr>
+          <tr>
+            <td>Income</td>
+            <td><input type="range" min="0" max="100" [(ngModel)]="valueIncome"></td>
+          </tr>
+          <tr>
+            <td>Race</td>
+            <td><input type="range" min="0" max="100" [(ngModel)]="valueRace"></td>
+          </tr>
+          <tr>
+            <td>Marital status</td>
+            <td><input type="range" min="0" max="100" [(ngModel)]="valueMarital"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="row">
     <div class="col-md-6">
-      <p>By starting the machine learning you will be shown alerts, where you should decide!</p>
+      <p>By starting the machine learning you will be shown alerts, where you should
+        decide!
+      </p>
     </div>
     <div class="col-md-6">
       <button type="button" class="btn btn-primary" (click)="startLearning()">Start machine learning</button>
@@ -15,14 +72,17 @@
 
   <div class="row margin-top-05">
     <div class="col-md-12">
-      <progressbar class="progress-striped active" [value]="progressValue" type="success" max="100">
+      <progressbar class="progress-striped active" [value]="progressValue" type="success"
+          max="100">
       </progressbar>
     </div>
   </div>
 
 </div>
 
-<div *ngIf="isModalShown" [config]="{ show: true }" (onShown)="onShown()" (onHidden)="onHidden()" bsModal #autoShownModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+<div *ngIf="isModalShown" [config]="{ show: true }" (onShown)="onShown()" (onHidden)="onHidden()"
+    bsModal #autoShownModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+    aria-hidden="true">
   <div class="modal-dialog modal-lg modal-full-width">
     <app-interactive (onOk)="onInteractiveOk($event)"></app-interactive>
   </div>
