@@ -4,6 +4,8 @@ import { DataArray1 } from './data';
 import { Adult } from './adult';
 import { GaugeSegment, GaugeLabel } from 'ng2-kw-gauge';
 
+import * as $A from 'anonymiationjs';
+
 @Component({
   selector: 'app-interactive',
   templateUrl: './interactive.component.html',
@@ -39,6 +41,59 @@ export class InteractiveComponent implements OnInit {
 
   ngOnInit() {
     this.readCsvData();
+    this.testSangreea();
+  }
+
+  testSangreea() {
+    let csvIn = new $A.IO.CSVIN($A.config.adults);
+    console.log("CSV Reader: ");
+    console.log(csvIn);
+
+    // Instantiate a SaNGreeA object
+    // NOTE: The config should be instantiated by the User Interface,
+    // the internal $A.config... was only for testing!
+    let config = $A.config.adults;
+
+    // of course we can overwrite the settings locally
+    config.NR_DRAWS = 500; // max for this file...
+    config.K_FACTOR = 7;
+    let san = new $A.algorithms.Sangreea("testus", config);
+    console.log("SaNGreeA Algorithm:");
+    console.log(san);
+    // Inspect the internal graph => should be empty
+    console.log("Graph Stats BEFORE Instantiation:");
+    console.log(san._graph.getStats());
+
+    // Remotely read the original data and anonymize
+    let url = "/original_data_500_rows.csv";
+
+    csvIn.readCSVFromURL(url, function(csv) {
+      console.log("File URL ANON: " + url);
+      console.log("File length ANON in total rows:");
+      console.log(csv.length);
+      console.log("Headers:")
+      console.log(csv[0]);
+      console.log(csv[1]);
+      san.instantiateGraph(csv, false);
+      // Inspect the internal graph again => should be populated now
+      console.log("Graph Stats AFTER Instantiation:");
+      console.log(san._graph.getStats());
+      // let's run the whole anonymization inside the browser
+      san.anonymizeGraph();
+      // let's take a look at the clusters
+      console.dir(san._clusters);
+
+      // Compute costs between some Cluster and some node
+      let cluster = selectRandomCluster(san._clusters);
+      let node = san._graph.getRandomNode();
+      function selectRandomCluster(clusters) {
+        return clusters[Math.floor(Math.random() * clusters.length)];
+      }
+      console.log("\n Computing cost of generalization between cluster and node:");
+      console.log(cluster);
+      console.log(node);
+      console.log("Cost: " + san.calculateGIL(cluster, node));
+    });
   }
 
   private setGauge(value: number): void {
