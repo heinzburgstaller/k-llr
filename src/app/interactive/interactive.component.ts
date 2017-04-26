@@ -3,6 +3,7 @@ import { Http, Response } from '@angular/http';
 import { DataArray1 } from './data';
 import { Adult } from './adult';
 import { GaugeSegment, GaugeLabel } from 'ng2-kw-gauge';
+import {SaNGreeA} from 'anonymiationjs';
 
 import * as $A from 'anonymiationjs';
 
@@ -32,6 +33,11 @@ export class InteractiveComponent implements OnInit {
   public decidedRows1: Array<Adult> = [];
   public decidedRows2: Array<Adult> = [];
   private oldCosts: number = 0;
+  private csvIn;
+  private current_node_id = 0;
+  private current_cluster1_id = 0;
+  private current_cluster2_id = 0;
+  private san_public: SaNGreeA;
 
   @Output() onOk = new EventEmitter<any>();
 
@@ -41,59 +47,81 @@ export class InteractiveComponent implements OnInit {
 
   ngOnInit() {
     this.readCsvData();
-    this.testSangreea();
+    //this.testSangreea();
+    //this.initAnonymisation();
   }
 
-  testSangreea() {
-    let csvIn = new $A.IO.CSVIN($A.config.adults);
-    console.log("CSV Reader: ");
-    console.log(csvIn);
-
-    // Instantiate a SaNGreeA object
-    // NOTE: The config should be instantiated by the User Interface,
-    // the internal $A.config... was only for testing!
+  private initAnonymisation(adults_list: Array<Adult>) {
+    this.csvIn = new $A.IO.CSVIN($A.config.adults);
     let config = $A.config.adults;
-
-    // of course we can overwrite the settings locally
+    /////CHANGE CONFIG!!!
+    /////
     config.NR_DRAWS = 500; // max for this file...
-    config.K_FACTOR = 7;
+    config.K_FACTOR = 3;
     let san = new $A.algorithms.Sangreea("testus", config);
-    console.log("SaNGreeA Algorithm:");
-    console.log(san);
-    // Inspect the internal graph => should be empty
-    console.log("Graph Stats BEFORE Instantiation:");
-    console.log(san._graph.getStats());
-
-    // Remotely read the original data and anonymize
     let url = "/original_data_500_rows.csv";
 
-    csvIn.readCSVFromURL(url, function(csv) {
-      console.log("File URL ANON: " + url);
-      console.log("File length ANON in total rows:");
-      console.log(csv.length);
-      console.log("Headers:")
-      console.log(csv[0]);
-      console.log(csv[1]);
+    var cluster_array1 = [];
+    var cluster_array2 = [];
+    var current_node_id = 0;
+
+    var current_cluster1_id = 0;
+    var current_cluster2_id = 0;
+
+    this.csvIn.readCSVFromURL(url, function(csv) {
       san.instantiateGraph(csv, false);
-      // Inspect the internal graph again => should be populated now
-      console.log("Graph Stats AFTER Instantiation:");
-      console.log(san._graph.getStats());
-      // let's run the whole anonymization inside the browser
       san.anonymizeGraph();
       // let's take a look at the clusters
       console.dir(san._clusters);
 
       // Compute costs between some Cluster and some node
-      let cluster = selectRandomCluster(san._clusters);
-      let node = san._graph.getRandomNode();
+      var current_cluster1 = selectRandomCluster(san._clusters);
+      var current_cluster2 = selectRandomCluster(san._clusters);
+console.log(current_cluster1);
+      while (current_cluster1 == current_cluster2) {
+        current_cluster2 = selectRandomCluster(san._clusters);
+      }
+
+      current_cluster1_id = current_cluster1._id;
+
+      current_cluster2_id = current_cluster2._id;
+
+      var current_node = san._graph.getRandomNode();
+      current_node_id = current_node._id;
       function selectRandomCluster(clusters) {
         return clusters[Math.floor(Math.random() * clusters.length)];
       }
-      console.log("\n Computing cost of generalization between cluster and node:");
-      console.log(cluster);
-      console.log(node);
-      console.log("Cost: " + san.calculateGIL(cluster, node));
+
+      for (var n in current_cluster1.nodes) {
+        cluster_array1.push(adults_list[n]);
+      }
+      for (var n in current_cluster2.nodes) {
+        cluster_array2.push(adults_list[n]);
+      }
     });
+
+this.sleep(2);
+
+    console.log(current_node_id);
+    console.log(current_cluster1_id);
+    console.log(current_cluster2_id);
+    console.log(cluster_array1);
+    console.log();
+
+
+    this.current_node_id = current_node_id;
+    this.current_cluster1_id = current_cluster1_id;
+    this.current_cluster2_id = current_cluster2_id;
+    this.san_public = san;
+
+    this.setClusterOptions(cluster_array1, cluster_array2, adults_list[this.current_node_id]);
+    this.setGauge(0);
+  }
+
+  private sleep(seconds)
+  {
+    var e = new Date().getTime() + (seconds * 1000);
+    while (new Date().getTime() <= e) {}
   }
 
   private setGauge(value: number): void {
@@ -115,11 +143,17 @@ export class InteractiveComponent implements OnInit {
   }
 
   public dragOverOption1(event: any) {
-    this.setGauge(74);
+    var x = this.san_public.calculateGIL(this.san_public._clusters[this.current_cluster1_id], this.san_public._graph.getNodeById(this.current_node_id));
+    console.log(x);
+    console.log(this.current_node_id);
+    this.setGauge(x*10);
   }
 
   public dragOverOption2(event: any) {
-    this.setGauge(43);
+    var x = this.san_public.calculateGIL(this.san_public._clusters[this.current_cluster2_id], this.san_public._graph.getNodeById(this.current_node_id));
+    console.log(x);
+    console.log(this.san_public._graph.getNodeById(this.current_node_id));
+    this.setGauge(x*10);
   }
 
   public dragDropOption1(event: any) {
@@ -180,10 +214,13 @@ export class InteractiveComponent implements OnInit {
       }
     }
 
-    this.option1Rows = [this.adults[0], this.adults[1], this.adults[2]];
-    this.option2Rows = [this.adults[0], this.adults[1], this.adults[2]];
-    this.decideRows = [this.adults[3]];
-    this.setGauge(0);
+    this.initAnonymisation(this.adults);
+  }
+
+  private setClusterOptions(cluster1: Adult[], cluster2: Adult[], node: Adult) {
+    this.option1Rows = cluster1;
+    this.option2Rows = cluster2;
+    this.decideRows = [node];
   }
 
   private handleError(error: any) {
@@ -202,6 +239,58 @@ export class InteractiveComponent implements OnInit {
 
   public ok(): void {
     this.onOk.emit();
+  }
+
+  private testSangreea() {
+    let csvIn = new $A.IO.CSVIN($A.config.adults);
+    console.log("CSV Reader: ");
+    console.log(csvIn);
+
+    // Instantiate a SaNGreeA object
+    // NOTE: The config should be instantiated by the User Interface,
+    // the internal $A.config... was only for testing!
+    let config = $A.config.adults;
+
+    // of course we can overwrite the settings locally
+    config.NR_DRAWS = 500; // max for this file...
+    config.K_FACTOR = 7;
+    let san = new $A.algorithms.Sangreea("testus", config);
+    console.log("SaNGreeA Algorithm:");
+    console.log(san);
+    // Inspect the internal graph => should be empty
+    console.log("Graph Stats BEFORE Instantiation:");
+    console.log(san._graph.getStats());
+
+    // Remotely read the original data and anonymize
+    let url = "/original_data_500_rows.csv";
+
+    csvIn.readCSVFromURL(url, function(csv) {
+      console.log("File URL ANON: " + url);
+      console.log("File length ANON in total rows:");
+      console.log(csv.length);
+      console.log("Headers:")
+      console.log(csv[0]);
+      console.log(csv[1]);
+      san.instantiateGraph(csv, false);
+      // Inspect the internal graph again => should be populated now
+      console.log("Graph Stats AFTER Instantiation:");
+      console.log(san._graph.getStats());
+      // let's run the whole anonymization inside the browser
+      san.anonymizeGraph();
+      // let's take a look at the clusters
+      console.dir(san._clusters);
+
+      // Compute costs between some Cluster and some node
+      let cluster = selectRandomCluster(san._clusters);
+      let node = san._graph.getRandomNode();
+      function selectRandomCluster(clusters) {
+        return clusters[Math.floor(Math.random() * clusters.length)];
+      }
+      console.log("\n Computing cost of generalization between cluster and node:");
+      console.log(cluster);
+      console.log(node);
+      console.log("Cost: " + san.calculateGIL(cluster, node));
+    });
   }
 
   public progressGraph1: any = {
