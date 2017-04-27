@@ -34,10 +34,8 @@ export class InteractiveComponent implements OnInit {
   public decidedRows2: Array<Adult> = [];
   private oldCosts: number = 0;
   private csvIn;
-  private current_node_id = 0;
-  private current_cluster1_id = 0;
-  private current_cluster2_id = 0;
   private san_public: SaNGreeA;
+  public testset_size = 300;
 
   @Output() onOk = new EventEmitter<any>();
 
@@ -56,17 +54,13 @@ export class InteractiveComponent implements OnInit {
     let config = $A.config.adults;
     /////CHANGE CONFIG!!!
     /////
-    config.NR_DRAWS = 500; // max for this file...
+    config.NR_DRAWS = this.testset_size; // max for this file...
     config.K_FACTOR = 3;
     let san = new $A.algorithms.Sangreea("testus", config);
     let url = "/original_data_500_rows.csv";
 
     var cluster_array1 = [];
     var cluster_array2 = [];
-    var current_node_id = 0;
-
-    var current_cluster1_id = 0;
-    var current_cluster2_id = 0;
 
     this.csvIn.readCSVFromURL(url, function(csv) {
       san.instantiateGraph(csv, false);
@@ -75,47 +69,40 @@ export class InteractiveComponent implements OnInit {
       console.dir(san._clusters);
 
       // Compute costs between some Cluster and some node
-      var current_cluster1 = selectRandomCluster(san._clusters);
-      var current_cluster2 = selectRandomCluster(san._clusters);
-console.log(current_cluster1);
-      while (current_cluster1 == current_cluster2) {
-        current_cluster2 = selectRandomCluster(san._clusters);
+      san._current_cluster1 = selectRandomCluster(san._clusters);
+      san._current_cluster2 = selectRandomCluster(san._clusters);
+
+      while (san._current_cluster1 == san._current_cluster2) {
+        san._current_cluster2 = selectRandomCluster(san._clusters);
       }
 
-      current_cluster1_id = current_cluster1._id;
+      san._current_node = san._graph.getRandomNode();
 
-      current_cluster2_id = current_cluster2._id;
-
-      var current_node = san._graph.getRandomNode();
-      current_node_id = current_node._id;
       function selectRandomCluster(clusters) {
         return clusters[Math.floor(Math.random() * clusters.length)];
       }
 
-      for (var n in current_cluster1.nodes) {
+      for (var n in san._current_cluster1.nodes) {
         cluster_array1.push(adults_list[n]);
       }
-      for (var n in current_cluster2.nodes) {
+      for (var n in san._current_cluster2.nodes) {
         cluster_array2.push(adults_list[n]);
       }
     });
 
-this.sleep(2);
 
-    console.log(current_node_id);
-    console.log(current_cluster1_id);
-    console.log(current_cluster2_id);
-    console.log(cluster_array1);
-    console.log();
+    console.log(san._current_cluster1);
+    console.log(san._current_cluster2);
+    console.log(san._current_node_id);
 
+    /*this.san_public = san;
 
-    this.current_node_id = current_node_id;
-    this.current_cluster1_id = current_cluster1_id;
-    this.current_cluster2_id = current_cluster2_id;
-    this.san_public = san;
+    this.setClusterOptions(cluster_array1, cluster_array2, adults_list[san._current_node_id]);
+    this.setGauge(0);*/
+  }
 
-    this.setClusterOptions(cluster_array1, cluster_array2, adults_list[this.current_node_id]);
-    this.setGauge(0);
+  public testT(){
+    console.log("AAAAAA");
   }
 
   private sleep(seconds)
@@ -143,16 +130,16 @@ this.sleep(2);
   }
 
   public dragOverOption1(event: any) {
-    var x = this.san_public.calculateGIL(this.san_public._clusters[this.current_cluster1_id], this.san_public._graph.getNodeById(this.current_node_id));
+    var x = this.san_public.calculateGIL(this.san_public._clusters[this.san_public._current_cluster1], this.san_public._graph.getNodeById(this.san_public._current_node_id));
     console.log(x);
-    console.log(this.current_node_id);
+    console.log(this.san_public._current_node_id);
     this.setGauge(x*10);
   }
 
   public dragOverOption2(event: any) {
-    var x = this.san_public.calculateGIL(this.san_public._clusters[this.current_cluster2_id], this.san_public._graph.getNodeById(this.current_node_id));
+    var x = this.san_public.calculateGIL(this.san_public._clusters[this.san_public._current_cluster2], this.san_public._graph.getNodeById(this.san_public._current_node_id));
     console.log(x);
-    console.log(this.san_public._graph.getNodeById(this.current_node_id));
+    console.log(this.san_public._current_node_id);
     this.setGauge(x*10);
   }
 
