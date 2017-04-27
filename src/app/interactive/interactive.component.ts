@@ -4,9 +4,15 @@ import { DataArray1 } from './data';
 import { Adult } from './adult';
 import { GaugeSegment, GaugeLabel } from 'ng2-kw-gauge';
 import { SaNGreeA, StringGenHierarchy } from 'anonymiationjs';
-//import * as $GH from '../../src/core/GenHierarchies';
 
-//import * as workclassGH from '../../genHierarchies/workclassGH.json';
+import * as workclassGH from '../../genHierarchies/workclassGH.json';
+import * as sexGH from '../../genHierarchies/sexGH.json';
+import * as faceGH from '../../genHierarchies/raceGH.json';
+import * as maritalStatusGH from '../../genHierarchies/marital-statusGH.json';
+import * as nativeCountryGH from '../../genHierarchies/native-countryGH.json';
+import * as relationshipGH from '../../genHierarchies/relationshipGH.json';
+import * as occupationGH from '../../genHierarchies/occupationGH.json';
+import * as incomeGH from '../../genHierarchies/incomeGH.json';
 
 import * as $A from 'anonymiationjs';
 
@@ -16,6 +22,9 @@ import * as $A from 'anonymiationjs';
   styleUrls: ['./interactive.component.css']
 })
 export class InteractiveComponent implements OnInit {
+
+  private genHierarchies: Array<any> = [workclassGH, sexGH, faceGH,
+    maritalStatusGH, nativeCountryGH, relationshipGH, occupationGH, incomeGH];
 
   public colors: any = {
     indigo: '#14143e',
@@ -40,14 +49,9 @@ export class InteractiveComponent implements OnInit {
   private san_public: SaNGreeA;
   public testset_size = 300;
 
-  private workclassGH;
-
   @Output() onOk = new EventEmitter<any>();
 
   constructor(private http: Http) {
-    //this.http.get('../../genHierarchies/workclassGH.json')
-    this.http.get('/genHierarchies/workclassGH.json')
-      .subscribe(res => this.workclassGH = res.json());
   }
 
   ngOnInit() {
@@ -69,14 +73,12 @@ export class InteractiveComponent implements OnInit {
     var cluster_array1 = [];
     var cluster_array2 = [];
 
-    console.log(this.workclassGH);
-    var jsonx:string = JSON.stringify(this.workclassGH);
-    console.log(jsonx);
-    //debugger;
-
-    //var strgh:StringGenHierarchy = new StringGenHierarchy(JSON.stringify(this.workclassGH));
-    //var strgh = new $A.genHierarchy.Category(jsonx);
-    //san.setCatHierarchy(strgh._name, strgh);
+    for (let genHierarchy of this.genHierarchies) {
+      console.log(genHierarchy);
+      let jsonx: string = JSON.stringify(genHierarchy);
+      let strgh = new $A.genHierarchy.Category(jsonx);
+      san.setCatHierarchy(strgh._name, strgh);
+    }
 
     this.csvIn.readCSVFromURL(url, function(csv) {
       san.instantiateGraph(csv, false);
@@ -105,7 +107,6 @@ export class InteractiveComponent implements OnInit {
         cluster_array2.push(adults_list[n]);
       }
     });
-
 
     console.log(san._current_cluster1);
     console.log(san._current_cluster2);
@@ -145,14 +146,16 @@ export class InteractiveComponent implements OnInit {
   }
 
   public dragOverOption1(event: any) {
-    var x = this.san_public.calculateGIL(this.san_public._clusters[this.san_public._current_cluster1], this.san_public._graph.getNodeById(this.san_public._current_node_id));
+    var x = this.san_public.calculateGIL(this.san_public._clusters[this.san_public._current_cluster1],
+      this.san_public._graph.getNodeById(this.san_public._current_node_id));
     console.log(x);
     console.log(this.san_public._current_node_id);
     this.setGauge(x * 10);
   }
 
   public dragOverOption2(event: any) {
-    var x = this.san_public.calculateGIL(this.san_public._clusters[this.san_public._current_cluster2], this.san_public._graph.getNodeById(this.san_public._current_node_id));
+    var x = this.san_public.calculateGIL(this.san_public._clusters[this.san_public._current_cluster2],
+      this.san_public._graph.getNodeById(this.san_public._current_node_id));
     console.log(x);
     console.log(this.san_public._current_node_id);
     this.setGauge(x * 10);
