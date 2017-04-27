@@ -10,7 +10,8 @@
       "assets": [
         "assets",
         "original_data_500_rows.csv",
-        "favicon.ico"
+        "favicon.ico",
+        "genHierarchies"
       ],
       "index": "index.html",
       "main": "main.ts",

@@ -3,7 +3,10 @@ import { Http, Response } from '@angular/http';
 import { DataArray1 } from './data';
 import { Adult } from './adult';
 import { GaugeSegment, GaugeLabel } from 'ng2-kw-gauge';
-import {SaNGreeA} from 'anonymiationjs';
+import { SaNGreeA, StringGenHierarchy } from 'anonymiationjs';
+//import * as $GH from '../../src/core/GenHierarchies';
+
+//import * as workclassGH from '../../genHierarchies/workclassGH.json';
 
 import * as $A from 'anonymiationjs';
 
@@ -37,10 +40,14 @@ export class InteractiveComponent implements OnInit {
   private san_public: SaNGreeA;
   public testset_size = 300;
 
+  private workclassGH;
+
   @Output() onOk = new EventEmitter<any>();
 
   constructor(private http: Http) {
-
+    //this.http.get('../../genHierarchies/workclassGH.json')
+    this.http.get('/genHierarchies/workclassGH.json')
+      .subscribe(res => this.workclassGH = res.json());
   }
 
   ngOnInit() {
@@ -61,6 +68,15 @@ export class InteractiveComponent implements OnInit {
 
     var cluster_array1 = [];
     var cluster_array2 = [];
+
+    console.log(this.workclassGH);
+    var jsonx:string = JSON.stringify(this.workclassGH);
+    console.log(jsonx);
+    //debugger;
+
+    //var strgh:StringGenHierarchy = new StringGenHierarchy(JSON.stringify(this.workclassGH));
+    //var strgh = new $A.genHierarchy.Category(jsonx);
+    //san.setCatHierarchy(strgh._name, strgh);
 
     this.csvIn.readCSVFromURL(url, function(csv) {
       san.instantiateGraph(csv, false);
@@ -101,14 +117,13 @@ export class InteractiveComponent implements OnInit {
     this.setGauge(0);*/
   }
 
-  public testT(){
+  public testT() {
     console.log("AAAAAA");
   }
 
-  private sleep(seconds)
-  {
+  private sleep(seconds) {
     var e = new Date().getTime() + (seconds * 1000);
-    while (new Date().getTime() <= e) {}
+    while (new Date().getTime() <= e) { }
   }
 
   private setGauge(value: number): void {
@@ -133,14 +148,14 @@ export class InteractiveComponent implements OnInit {
     var x = this.san_public.calculateGIL(this.san_public._clusters[this.san_public._current_cluster1], this.san_public._graph.getNodeById(this.san_public._current_node_id));
     console.log(x);
     console.log(this.san_public._current_node_id);
-    this.setGauge(x*10);
+    this.setGauge(x * 10);
   }
 
   public dragOverOption2(event: any) {
     var x = this.san_public.calculateGIL(this.san_public._clusters[this.san_public._current_cluster2], this.san_public._graph.getNodeById(this.san_public._current_node_id));
     console.log(x);
     console.log(this.san_public._current_node_id);
-    this.setGauge(x*10);
+    this.setGauge(x * 10);
   }
 
   public dragDropOption1(event: any) {
