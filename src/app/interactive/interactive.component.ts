@@ -32,14 +32,16 @@ export class InteractiveComponent implements OnInit {
   public option1Rows: Array<AdultGen> = [];
   public option2Rows: Array<AdultGen> = [];
   public decideRows: Array<Adult> = [];
-  public decidedRows1: Array<Adult> = [];
-  public decidedRows2: Array<Adult> = [];
+  public decidedRows1: Array<AdultGen> = [];
+  public decidedRows2: Array<AdultGen> = [];
   private oldCosts: number = 0;
   private adultReader: AdultReader = new AdultReader();
   private sangreea: SaNGreeA;
   public progressGraph1: any = ProgressGraphSettings.defaultSetting;
   private option1Cluster: any;
   private option2Cluster: any;
+  private option1Costs: number;
+  private option2Costs: number;
 
   @Output() onOk = new EventEmitter<any>();
 
@@ -77,6 +79,11 @@ export class InteractiveComponent implements OnInit {
     this.option2Rows = this.getAdultGensFromCluster(this.option2Cluster);
     let node = this.sangreea._graph.getRandomNode();
     this.decideRows = [this.adults[node['_id']]];
+
+    this.option1Costs = this.sangreea.calculateGIL(this.option1Cluster,
+      this.sangreea._graph.getNodeById(this.decideRows[0].id));
+    this.option2Costs = this.sangreea.calculateGIL(this.option2Cluster,
+      this.sangreea._graph.getNodeById(this.decideRows[0].id));
   }
 
   private selectRandomCluster(clusters) {
@@ -132,37 +139,42 @@ export class InteractiveComponent implements OnInit {
   }
 
   public dragOverOption1(event: any) {
-    var x = this.sangreea.calculateGIL(this.option1Cluster,
-      this.sangreea._graph.getNodeById(this.decideRows[0].id));
-    this.setGauge(Math.round(x * 100));
+    this.setGauge(Math.round(this.option1Costs * 100));
   }
 
   public dragOverOption2(event: any) {
-    var x = this.sangreea.calculateGIL(this.option2Cluster,
-      this.sangreea._graph.getNodeById(this.decideRows[0].id));
-    this.setGauge(Math.round(x * 100));
+    this.setGauge(Math.round(this.option2Costs * 100));
+  }
+
+  private copyAdultGen(a: Adult, from: AdultGen): AdultGen {
+    var ag: AdultGen = new AdultGen();
+    ag.adult = a;
+    ag.age = from.age;
+    ag.marital_status = from.marital_status;
+    // TODO
+    return ag;
   }
 
   public dragDropOption1(event: any) {
     if (this.decideRows.length > 0) {
-      this.decidedRows1.push(this.decideRows[0]);
+      this.decidedRows1.push(this.copyAdultGen(this.decideRows[0], this.option1Rows[0]));
       this.decideRows = [];
     }
 
     if (this.decidedRows2.length > 0) {
-      this.decidedRows1.push(this.decidedRows2[0]);
+      this.decidedRows1.push(this.copyAdultGen(this.decidedRows2[0].adult, this.option1Rows[0]));
       this.decidedRows2 = []
     }
   }
 
   public dragDropOption2(event: any) {
     if (this.decideRows.length > 0) {
-      this.decidedRows2.push(this.decideRows[0]);
+      this.decidedRows2.push(this.copyAdultGen(this.decideRows[0], this.option2Rows[0]));
       this.decideRows = [];
     }
 
     if (this.decidedRows1.length > 0) {
-      this.decidedRows2.push(this.decidedRows1[0]);
+      this.decidedRows2.push(this.copyAdultGen(this.decidedRows1[0].adult, this.option2Rows[0]));
       this.decidedRows1 = []
     }
   }
