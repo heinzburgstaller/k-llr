@@ -1,8 +1,6 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Http, Response } from '@angular/http';
-import { DataArray1 } from './data';
-import { Adult } from './adult';
-import { GaugeSegment, GaugeLabel } from 'ng2-kw-gauge';
+import { Adult, AdultGen } from './adult';
 import { SaNGreeA, StringGenHierarchy } from 'anonymiationjs';
 
 import * as workclassGH from '../../genHierarchies/workclassGH.json';
@@ -16,6 +14,9 @@ import * as incomeGH from '../../genHierarchies/incomeGH.json';
 
 import * as $A from 'anonymiationjs';
 
+import { ProgressGraphSettings } from './progressGraphSettings';
+import { ReaderCallback, AdultReader } from './adultReader';
+
 @Component({
   selector: 'app-interactive',
   templateUrl: './interactive.component.html',
@@ -26,28 +27,19 @@ export class InteractiveComponent implements OnInit {
   private genHierarchies: Array<any> = [workclassGH, sexGH, faceGH,
     maritalStatusGH, nativeCountryGH, relationshipGH, occupationGH, incomeGH];
 
-  public colors: any = {
-    indigo: '#14143e',
-    pink: '#fd1c49',
-    orange: '#ff6e00',
-    yellow: '#f0c800',
-    mint: '#00efab',
-    cyan: '#05d1ff',
-    purple: '#841386',
-    white: '#fff'
-  };
-
-  private csvUrl: string = 'original_data_500_rows.csv';
+  private csvLines: Array<string>
   private adults: Array<Adult> = [];
-  public option1Rows: Array<Adult> = [];
-  public option2Rows: Array<Adult> = [];
+  public option1Rows: Array<AdultGen> = [];
+  public option2Rows: Array<AdultGen> = [];
   public decideRows: Array<Adult> = [];
   public decidedRows1: Array<Adult> = [];
   public decidedRows2: Array<Adult> = [];
   private oldCosts: number = 0;
-  private csvIn;
-  private san_public: SaNGreeA;
-  public testset_size = 300;
+  private adultReader: AdultReader = new AdultReader();
+  private sangreea: SaNGreeA;
+  public progressGraph1: any = ProgressGraphSettings.defaultSetting;
+  private option1Cluster: any;
+  private option2Cluster: any;
 
   @Output() onOk = new EventEmitter<any>();
 
@@ -55,76 +47,70 @@ export class InteractiveComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.readCsvData();
-    //this.testSangreea();
-    //this.initAnonymisation();
+    this.adultReader.readFromCSV(this.http, this.readFromCSVcallback);
   }
 
-  private initAnonymisation(adults_list: Array<Adult>) {
-    this.csvIn = new $A.IO.CSVIN($A.config.adults);
-    let config = $A.config.adults;
-    /////CHANGE CONFIG!!!
-    /////
-    config.NR_DRAWS = this.testset_size; // max for this file...
-    config.K_FACTOR = 3;
-    let san = new $A.algorithms.Sangreea("testus", config);
-    let url = "/original_data_500_rows.csv";
+  private readFromCSVcallback: ReaderCallback = (l: Array<string>, a: Array<Adult>): void => {
+    this.adults = a;
+    this.csvLines = l;
+    this.anon();
+  }
 
-    var cluster_array1 = [];
-    var cluster_array2 = [];
+  private anon(): void {
+    var config = $A.config.adults;
+    config.NR_DRAWS = this.adults.length * 0.5;
+    config.K_FACTOR = 2;
 
+    this.sangreea = new $A.algorithms.Sangreea("testus", config);
     for (let genHierarchy of this.genHierarchies) {
-      console.log(genHierarchy);
       let jsonx: string = JSON.stringify(genHierarchy);
       let strgh = new $A.genHierarchy.Category(jsonx);
-      san.setCatHierarchy(strgh._name, strgh);
+      this.sangreea.setCatHierarchy(strgh._name, strgh);
     }
 
-    this.csvIn.readCSVFromURL(url, function(csv) {
-      san.instantiateGraph(csv, false);
-      san.anonymizeGraph();
-      // let's take a look at the clusters
-      console.dir(san._clusters);
+    this.sangreea.instantiateGraph(this.csvLines, false);
+    this.sangreea.anonymizeGraph();
 
-      // Compute costs between some Cluster and some node
-      san._current_cluster1 = selectRandomCluster(san._clusters);
-      san._current_cluster2 = selectRandomCluster(san._clusters);
-
-      while (san._current_cluster1 == san._current_cluster2) {
-        san._current_cluster2 = selectRandomCluster(san._clusters);
-      }
-
-      san._current_node = san._graph.getRandomNode();
-
-      function selectRandomCluster(clusters) {
-        return clusters[Math.floor(Math.random() * clusters.length)];
-      }
-
-      for (var n in san._current_cluster1.nodes) {
-        cluster_array1.push(adults_list[n]);
-      }
-      for (var n in san._current_cluster2.nodes) {
-        cluster_array2.push(adults_list[n]);
-      }
-    });
-
-    console.log(san._current_cluster1);
-    console.log(san._current_cluster2);
-    console.log(san._current_node_id);
-
-    /*this.san_public = san;
-
-    this.setClusterOptions(cluster_array1, cluster_array2, adults_list[san._current_node_id]);
-    this.setGauge(0);*/
+    this.option1Cluster = this.selectRandomCluster(this.sangreea._clusters);
+    this.option1Rows = this.getAdultGensFromCluster(this.option1Cluster);
+    this.option2Cluster = this.selectRandomCluster(this.sangreea._clusters);
+    this.option2Rows = this.getAdultGensFromCluster(this.option2Cluster);
+    let node = this.sangreea._graph.getRandomNode();
+    this.decideRows = [this.adults[node['_id']]];
   }
 
-  public testT() {
-    console.log("AAAAAA");
+  private selectRandomCluster(clusters) {
+    return clusters[Math.floor(Math.random() * clusters.length)];
   }
 
-  private sleep(seconds) {
-    var e = new Date().getTime() + (seconds * 1000);
-    while (new Date().getTime() <= e) { }
+  private getAdultGensFromCluster(cluster): Array<AdultGen> {
+    var adultGens: Array<AdultGen> = [];
+
+    for (let key in cluster.nodes) {
+      let ag: AdultGen = new AdultGen();
+      ag.adult = this.adults[cluster.nodes[key]['_id']];
+      ag.income = cluster.gen_feat.income;
+      ag.marital_status = cluster.gen_feat['marital-status'];
+      ag.native_country = cluster.gen_feat['native-country'];
+      ag.occupation = cluster.gen_feat['occupation'];
+      ag.race = cluster.gen_feat['race'];
+      ag.sex = cluster.gen_feat['sex'];
+      ag.workclass = cluster.gen_feat['workclass'];
+      console.log(cluster.gen_ranges);
+      if (cluster.gen_ranges.age[0] == cluster.gen_ranges.age[1]) {
+        ag.age = cluster.gen_ranges.age[0];
+      } else {
+        ag.age = cluster.gen_ranges.age[0] + ' - ' + cluster.gen_ranges.age[1];
+      }
+      if (cluster.gen_ranges['hours-per-week'][0] == cluster.gen_ranges['hours-per-week'][1]) {
+        ag.age = cluster.gen_ranges['hours-per-week'][0];
+      } else {
+        ag.age = cluster.gen_ranges['hours-per-week'][0] + ' - ' + cluster.gen_ranges['hours-per-week'][1];
+      }
+      adultGens.push(ag);
+    }
+
+    return adultGens;
   }
 
   private setGauge(value: number): void {
@@ -146,19 +132,15 @@ export class InteractiveComponent implements OnInit {
   }
 
   public dragOverOption1(event: any) {
-    var x = this.san_public.calculateGIL(this.san_public._clusters[this.san_public._current_cluster1],
-      this.san_public._graph.getNodeById(this.san_public._current_node_id));
-    console.log(x);
-    console.log(this.san_public._current_node_id);
-    this.setGauge(x * 10);
+    var x = this.sangreea.calculateGIL(this.option1Cluster,
+      this.sangreea._graph.getNodeById(this.decideRows[0].id));
+    this.setGauge(Math.round(x * 100));
   }
 
   public dragOverOption2(event: any) {
-    var x = this.san_public.calculateGIL(this.san_public._clusters[this.san_public._current_cluster2],
-      this.san_public._graph.getNodeById(this.san_public._current_node_id));
-    console.log(x);
-    console.log(this.san_public._current_node_id);
-    this.setGauge(x * 10);
+    var x = this.sangreea.calculateGIL(this.option2Cluster,
+      this.sangreea._graph.getNodeById(this.decideRows[0].id));
+    this.setGauge(Math.round(x * 100));
   }
 
   public dragDropOption1(event: any) {
@@ -185,148 +167,12 @@ export class InteractiveComponent implements OnInit {
     }
   }
 
-  private readCsvData() {
-    this.http.get(this.csvUrl)
-      .subscribe(
-      data => this.extractData(data),
-      err => this.handleError(err)
-      );
-  }
-
-  private extractData(res: Response) {
-    let csvData = res['_body'] || '';
-    let allTextLines = csvData.split(/\r\n|\n/);
-    let headers = allTextLines[0].split(',');
-    let lines = [];
-
-    for (let i = 1; i < allTextLines.length; i++) {
-      // split content based on comma
-      let data = allTextLines[i].split(',');
-      if (data.length == headers.length) {
-        let a = new Adult();
-        a.age = Number(data[0].trim());
-        a.education_num = Number(data[1].trim());
-        a.hours_per_week = Number(data[2].trim());
-        a.workclass = data[3].trim();
-        a.native_country = data[4].trim();
-        a.sex = data[5].trim();
-        a.race = data[6].trim();
-        a.relationship = data[7].trim();
-        a.occupation = data[8].trim();
-        a.income = data[9].trim();
-        a.marital_status = data[10].trim();
-        this.adults.push(a);
-      }
-    }
-
-    this.initAnonymisation(this.adults);
-  }
-
-  private setClusterOptions(cluster1: Adult[], cluster2: Adult[], node: Adult) {
-    this.option1Rows = cluster1;
-    this.option2Rows = cluster2;
-    this.decideRows = [node];
-  }
-
-  private handleError(error: any) {
-    // In a real world app, we might use a remote logging infrastructure
-    // We'd also dig deeper into the error to get a better message
-    let errMsg = (error.message) ? error.message :
-      error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-    console.error(errMsg); // log to console instead
-    return errMsg;
-  }
-
-  // TODO not needed anymore
   setIndex(index: number): void {
-
+    // TODO not needed anymore
   }
 
   public ok(): void {
     this.onOk.emit();
   }
-
-  private testSangreea() {
-    let csvIn = new $A.IO.CSVIN($A.config.adults);
-    console.log("CSV Reader: ");
-    console.log(csvIn);
-
-    // Instantiate a SaNGreeA object
-    // NOTE: The config should be instantiated by the User Interface,
-    // the internal $A.config... was only for testing!
-    let config = $A.config.adults;
-
-    // of course we can overwrite the settings locally
-    config.NR_DRAWS = 500; // max for this file...
-    config.K_FACTOR = 7;
-    let san = new $A.algorithms.Sangreea("testus", config);
-    console.log("SaNGreeA Algorithm:");
-    console.log(san);
-    // Inspect the internal graph => should be empty
-    console.log("Graph Stats BEFORE Instantiation:");
-    console.log(san._graph.getStats());
-
-    // Remotely read the original data and anonymize
-    let url = "/original_data_500_rows.csv";
-
-    csvIn.readCSVFromURL(url, function(csv) {
-      console.log("File URL ANON: " + url);
-      console.log("File length ANON in total rows:");
-      console.log(csv.length);
-      console.log("Headers:")
-      console.log(csv[0]);
-      console.log(csv[1]);
-      san.instantiateGraph(csv, false);
-      // Inspect the internal graph again => should be populated now
-      console.log("Graph Stats AFTER Instantiation:");
-      console.log(san._graph.getStats());
-      // let's run the whole anonymization inside the browser
-      san.anonymizeGraph();
-      // let's take a look at the clusters
-      console.dir(san._clusters);
-
-      // Compute costs between some Cluster and some node
-      let cluster = selectRandomCluster(san._clusters);
-      let node = san._graph.getRandomNode();
-      function selectRandomCluster(clusters) {
-        return clusters[Math.floor(Math.random() * clusters.length)];
-      }
-      console.log("\n Computing cost of generalization between cluster and node:");
-      console.log(cluster);
-      console.log(node);
-      console.log("Cost: " + san.calculateGIL(cluster, node));
-    });
-  }
-
-  public progressGraph1: any = {
-    bgRadius: 60,
-    bgColor: this.colors.indigo,
-    rounded: true,
-    reverse: false,
-    animationSecs: 1,
-    labels: [
-      new GaugeLabel({
-        color: this.colors.white,
-        text: 'Cost',
-        x: 0,
-        y: 20,
-        fontSize: '1em'
-      }),
-      new GaugeLabel({
-        color: this.colors.pink,
-        text: 'N/A',
-        x: 0,
-        y: 0,
-        fontSize: '2em'
-      })
-    ],
-    segments: [
-      new GaugeSegment({
-        value: 0,
-        color: this.colors.pink,
-        borderWidth: 20
-      })
-    ]
-  };
 
 }

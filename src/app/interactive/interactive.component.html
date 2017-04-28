@@ -14,13 +14,13 @@
               (onDropSuccess)="dragDropOption1($event)">
             <thead>
               <tr>
-                <th style="width: 5%">Age</th>
+                <th style="width: 8%">Age</th>
                 <th style="width: 5%">Edu.</th>
                 <th style="width: 5%">h/week</th>
                 <th style="width: 15%">Native Country</th>
                 <th style="width: 5%">Sex</th>
                 <th style="width: 15%">Relationship</th>
-                <th style="width: 15%">Occupation</th>
+                <th style="width: 12%">Occupation</th>
                 <th style="width: 10%">Income</th>
                 <th style="width: 10%">Race</th>
                 <th style="width: 15%">Marital status</th>
@@ -75,13 +75,13 @@
           <table dnd-draggable [dragEnabled]="true" class="table" [mfData]="decideRows" #mfDecide="mfDataTable">
             <tbody>
               <tr *ngFor="let item of mfDecide.data" class="success">
-                <td style="width: 5%; text-align: right">{{item.age}}</td>
+                <td style="width: 8%; text-align: right">{{item.age}}</td>
                 <td style="width: 5%; text-align: right">{{item.education_num}}</td>
                 <td style="width: 5%; text-align: right">{{item.hours_per_week}}</td>
                 <td style="width: 15%">{{item.native_country}}</td>
                 <td style="width: 5%">{{item.sex}}</td>
                 <td style="width: 15%">{{item.relationship}}</td>
-                <td style="width: 15%">{{item.occupation}}</td>
+                <td style="width: 12%">{{item.occupation}}</td>
                 <td style="width: 10%">{{item.income}}</td>
                 <td style="width: 10%">{{item.race}}</td>
                 <td style="width: 15%">{{item.marital_status}}</td>
@@ -107,13 +107,13 @@
               (onDropSuccess)="dragDropOption2($event)">
             <thead>
               <tr>
-                <th style="width: 5%">Age</th>
+                <th style="width: 8%">Age</th>
                 <th style="width: 5%">Edu.</th>
                 <th style="width: 5%">h/week</th>
                 <th style="width: 15%">Native Country</th>
                 <th style="width: 5%">Sex</th>
                 <th style="width: 15%">Relationship</th>
-                <th style="width: 15%">Occupation</th>
+                <th style="width: 12%">Occupation</th>
                 <th style="width: 10%">Income</th>
                 <th style="width: 10%">Race</th>
                 <th style="width: 15%">Marital status</th>
