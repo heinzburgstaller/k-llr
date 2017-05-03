@@ -3,7 +3,7 @@ import { Http, Response } from '@angular/http';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { InteractiveComponent } from '../interactive/interactive.component';
-import { SaNGreeA, StringGenHierarchy } from 'anonymiationjs';
+import { SaNGreeA, StringGenHierarchy, ISaNGreeAConfig } from 'anonymiationjs';
 import { Adult, AdultGen } from '../adult';
 import { ReaderCallback, AdultReader } from '../adultReader';
 
@@ -65,7 +65,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private configureSangreea(): void {
-    var config = $A.config.adults;
+    var config:ISaNGreeAConfig = $A.config.adults;
     config.NR_DRAWS = this.adults.length * 0.5;
     config.K_FACTOR = 2;
 
@@ -76,8 +76,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.sangreea.setCatHierarchy(strgh._name, strgh);
     }
 
+    //debugger;
     this.sangreea.instantiateGraph(this.csvLines, false);
     this.sangreea.anonymizeGraph();
+    //debugger;
   }
 
   ngAfterViewInit() {

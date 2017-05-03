@@ -77,6 +77,7 @@ export class InteractiveComponent implements OnInit {
       ag.race = cluster.gen_feat['race'];
       ag.sex = cluster.gen_feat['sex'];
       ag.workclass = cluster.gen_feat['workclass'];
+      ag.relationship = cluster.gen_feat['relationship'];
       console.log(cluster.gen_ranges);
       if (cluster.gen_ranges.age[0] == cluster.gen_ranges.age[1]) {
         ag.age = cluster.gen_ranges.age[0];
@@ -84,9 +85,9 @@ export class InteractiveComponent implements OnInit {
         ag.age = cluster.gen_ranges.age[0] + ' - ' + cluster.gen_ranges.age[1];
       }
       if (cluster.gen_ranges['hours-per-week'][0] == cluster.gen_ranges['hours-per-week'][1]) {
-        ag.age = cluster.gen_ranges['hours-per-week'][0];
+        ag.hours_per_week = cluster.gen_ranges['hours-per-week'][0];
       } else {
-        ag.age = cluster.gen_ranges['hours-per-week'][0] + ' - ' + cluster.gen_ranges['hours-per-week'][1];
+        ag.hours_per_week = cluster.gen_ranges['hours-per-week'][0] + ' - ' + cluster.gen_ranges['hours-per-week'][1];
       }
       adultGens.push(ag);
     }
