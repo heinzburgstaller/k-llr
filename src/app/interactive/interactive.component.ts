@@ -32,6 +32,7 @@ export class InteractiveComponent implements OnInit {
   public option1Rows: Array<AdultGen> = [];
   public option2Rows: Array<AdultGen> = [];
   public decideRows: Array<Adult> = [];
+  public decideBaseNode: Array<Adult> = [];
   public decidedRows1: Array<AdultGen> = [];
   public decidedRows2: Array<AdultGen> = [];
   private oldCosts: number = 0;
@@ -42,6 +43,7 @@ export class InteractiveComponent implements OnInit {
   private option2Cluster: any;
   private option1Costs: number;
   private option2Costs: number;
+  private option1selected: boolean = false;
 
   @Output() onOk = new EventEmitter<any>();
 
@@ -74,14 +76,18 @@ export class InteractiveComponent implements OnInit {
     this.sangreea.anonymizeGraph();
 
     this.option1Cluster = this.selectRandomCluster(this.sangreea._clusters);
+    console.log(this.option1Cluster);
+
     this.option1Rows = this.getAdultGensFromCluster(this.option1Cluster);
     this.option2Cluster = this.selectRandomCluster(this.sangreea._clusters);
     this.option2Rows = this.getAdultGensFromCluster(this.option2Cluster);
     let node = this.sangreea._graph.getRandomNode();
     this.decideRows = [this.adults[node['_id']]];
+    this.decideBaseNode = this.decideRows;
 
     this.option1Costs = this.sangreea.calculateGIL(this.option1Cluster,
       this.sangreea._graph.getNodeById(this.decideRows[0].id));
+    console.log(this.sangreea._graph.getNodeById(this.decideRows[0].id));
     this.option2Costs = this.sangreea.calculateGIL(this.option2Cluster,
       this.sangreea._graph.getNodeById(this.decideRows[0].id));
   }
@@ -165,6 +171,7 @@ export class InteractiveComponent implements OnInit {
       this.decidedRows1.push(this.copyAdultGen(this.decidedRows2[0].adult, this.option1Rows[0]));
       this.decidedRows2 = []
     }
+    this.option1selected = true;
   }
 
   public dragDropOption2(event: any) {
@@ -177,6 +184,7 @@ export class InteractiveComponent implements OnInit {
       this.decidedRows2.push(this.copyAdultGen(this.decidedRows1[0].adult, this.option2Rows[0]));
       this.decidedRows1 = []
     }
+    this.option1selected = false;
   }
 
   setIndex(index: number): void {
@@ -184,6 +192,21 @@ export class InteractiveComponent implements OnInit {
   }
 
   public ok(): void {
+
+    if (this.option1selected) {
+      for (var i in this.sangreea._clusters) {
+        if (this.option1Cluster == this.sangreea._clusters[i]) {
+          console.log(this.sangreea._clusters[i].nodes);
+          this.sangreea._clusters[i].nodes[3] = this.sangreea._graph.getNodeById(this.decideBaseNode[0].id);
+          console.log(i);
+          console.log(this.sangreea._clusters[i]);
+          break; //Stop this loop, we found it!
+        }
+      }
+    } else {
+
+    }
+
     this.onOk.emit();
   }
 
