@@ -1,21 +1,7 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Adult, AdultGen } from './adult';
-import { SaNGreeA, StringGenHierarchy } from 'anonymiationjs';
-
-import * as workclassGH from '../../genHierarchies/workclassGH.json';
-import * as sexGH from '../../genHierarchies/sexGH.json';
-import * as faceGH from '../../genHierarchies/raceGH.json';
-import * as maritalStatusGH from '../../genHierarchies/marital-statusGH.json';
-import * as nativeCountryGH from '../../genHierarchies/native-countryGH.json';
-import * as relationshipGH from '../../genHierarchies/relationshipGH.json';
-import * as occupationGH from '../../genHierarchies/occupationGH.json';
-import * as incomeGH from '../../genHierarchies/incomeGH.json';
-
-import * as $A from 'anonymiationjs';
-
+import { Adult, AdultGen } from '../adult';
+import { SaNGreeA } from 'anonymiationjs';
 import { ProgressGraphSettings } from './progressGraphSettings';
-import { ReaderCallback, AdultReader } from './adultReader';
 
 @Component({
   selector: 'app-interactive',
@@ -24,11 +10,9 @@ import { ReaderCallback, AdultReader } from './adultReader';
 })
 export class InteractiveComponent implements OnInit {
 
-  private genHierarchies: Array<any> = [workclassGH, sexGH, faceGH,
-    maritalStatusGH, nativeCountryGH, relationshipGH, occupationGH, incomeGH];
-
-  private csvLines: Array<string>
+  private sangreea: SaNGreeA;
   private adults: Array<Adult> = [];
+
   public option1Rows: Array<AdultGen> = [];
   public option2Rows: Array<AdultGen> = [];
   public decideRows: Array<Adult> = [];
@@ -36,8 +20,7 @@ export class InteractiveComponent implements OnInit {
   public decidedRows1: Array<AdultGen> = [];
   public decidedRows2: Array<AdultGen> = [];
   private oldCosts: number = 0;
-  private adultReader: AdultReader = new AdultReader();
-  private sangreea: SaNGreeA;
+
   public progressGraph1: any = ProgressGraphSettings.defaultSetting;
   private option1Cluster: any;
   private option2Cluster: any;
@@ -47,34 +30,19 @@ export class InteractiveComponent implements OnInit {
 
   @Output() onOk = new EventEmitter<any>();
 
-  constructor(private http: Http) {
+  constructor() {
   }
 
   ngOnInit() {
-    this.adultReader.readFromCSV(this.http, this.readFromCSVcallback);
   }
 
-  private readFromCSVcallback: ReaderCallback = (l: Array<string>, a: Array<Adult>): void => {
+  public configure(s: SaNGreeA, a: Array<Adult>): void {
+    this.sangreea = s;
     this.adults = a;
-    this.csvLines = l;
     this.anon();
   }
 
   private anon(): void {
-    var config = $A.config.adults;
-    config.NR_DRAWS = this.adults.length * 0.5;
-    config.K_FACTOR = 2;
-
-    this.sangreea = new $A.algorithms.Sangreea("testus", config);
-    for (let genHierarchy of this.genHierarchies) {
-      let jsonx: string = JSON.stringify(genHierarchy);
-      let strgh = new $A.genHierarchy.Category(jsonx);
-      this.sangreea.setCatHierarchy(strgh._name, strgh);
-    }
-
-    this.sangreea.instantiateGraph(this.csvLines, false);
-    this.sangreea.anonymizeGraph();
-
     this.option1Cluster = this.selectRandomCluster(this.sangreea._clusters);
     console.log(this.option1Cluster);
 
@@ -185,10 +153,6 @@ export class InteractiveComponent implements OnInit {
       this.decidedRows1 = []
     }
     this.option1selected = false;
-  }
-
-  setIndex(index: number): void {
-    // TODO not needed anymore
   }
 
   public ok(): void {
