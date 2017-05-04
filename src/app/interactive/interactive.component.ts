@@ -182,11 +182,11 @@ export class InteractiveComponent implements OnInit {
 
   public ok(): void {
 
-    /*  if (this.option1selected) {
-        this.calcNewRanges(this.option1Cluster, this.decideBaseNode);
-      } else {
-        this.calcNewRanges(this.option2Cluster, this.decideBaseNode);
-      }*/
+    if (this.option1selected) {
+      this.calcNewClusterInSangreea(this.option1Cluster, this.decideBaseNode);
+    } else {
+      this.calcNewClusterInSangreea(this.option2Cluster, this.decideBaseNode);
+    }
     this.onOk.emit();
   }
 
