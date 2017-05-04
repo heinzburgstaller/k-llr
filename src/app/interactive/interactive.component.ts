@@ -121,57 +121,72 @@ export class InteractiveComponent implements OnInit {
     this.setGauge(Math.round(this.option2Costs * 100));
   }
 
-  private copyAdultGen(a: Adult, from: AdultGen): AdultGen {
+  private copyAdultGen(Cl: any, from: AdultGen): AdultGen {
     var ag: AdultGen = new AdultGen();
-    ag.adult = a;
     ag.age = from.age;
     ag.marital_status = from.marital_status;
-    // TODO
     return ag;
   }
 
   public dragDropOption1(event: any) {
-    if (this.decideRows.length > 0) {
-      this.decidedRows1.push(this.copyAdultGen(this.decideRows[0], this.option1Rows[0]));
-      this.decideRows = [];
-    }
 
-    if (this.decidedRows2.length > 0) {
-      this.decidedRows1.push(this.copyAdultGen(this.decidedRows2[0].adult, this.option1Rows[0]));
-      this.decidedRows2 = []
-    }
+    var copyCluster = JSON.parse(JSON.stringify(this.option1Cluster));
+
+    this.calcNewCluster(copyCluster, this.decideBaseNode);
+    console.log(copyCluster);
+    var rows = this.getAdultGensFromCluster(copyCluster);
+    this.decideRows = [];
+    this.decidedRows1.push(rows[this.option1Rows.length - 1]);
+    this.decidedRows2 = [];
+
     this.option1selected = true;
   }
 
   public dragDropOption2(event: any) {
-    if (this.decideRows.length > 0) {
-      this.decidedRows2.push(this.copyAdultGen(this.decideRows[0], this.option2Rows[0]));
-      this.decideRows = [];
-    }
+    var copyCluster = JSON.parse(JSON.stringify(this.option2Cluster));
 
-    if (this.decidedRows1.length > 0) {
-      this.decidedRows2.push(this.copyAdultGen(this.decidedRows1[0].adult, this.option2Rows[0]));
-      this.decidedRows1 = []
-    }
+    this.calcNewCluster(copyCluster, this.decideBaseNode);
+    var rows = this.getAdultGensFromCluster(copyCluster);
+    this.decideRows = [];
+    this.decidedRows2.push(rows[this.option2Rows.length - 1]);
+    this.decidedRows1 = [];
+
     this.option1selected = false;
+  }
+
+  private calcNewCluster(Cl: any, decideBaseNode: Array<Adult>): void {
+
+    Cl.nodes[decideBaseNode[0].id] = this.sangreea._graph.getNodeById(decideBaseNode[0].id);
+    console.log("UUUUUUUUU");
+    this.sangreea.updateLevels(Cl, this.sangreea._graph.getNodeById(decideBaseNode[0].id));
+
+    Object.keys(this.sangreea._cont_hierarchies).forEach((range) => {
+      Cl.gen_ranges[range] = this.sangreea.expandRange(Cl.gen_ranges[range], this.sangreea._graph.getNodeById(decideBaseNode[0].id).getFeature(range));
+    });
+  }
+
+  private calcNewClusterInSangreea(Cl: any, decideBaseNode: Array<Adult>): void {
+    for (var i in this.sangreea._clusters) {
+      if (Cl == this.sangreea._clusters[i]) {
+        this.sangreea._clusters[i].nodes[decideBaseNode[0].id] = this.sangreea._graph.getNodeById(decideBaseNode[0].id);
+        console.log("UUUUUUUUU");
+        this.sangreea.updateLevels(this.sangreea._clusters[i], this.sangreea._graph.getNodeById(decideBaseNode[0].id));
+
+        Object.keys(this.sangreea._cont_hierarchies).forEach((range) => {
+          this.sangreea._clusters[i].gen_ranges[range] = this.sangreea.expandRange(this.sangreea._clusters[i].gen_ranges[range], this.sangreea._graph.getNodeById(decideBaseNode[0].id).getFeature(range));
+        });
+        break;
+      }
+    }
   }
 
   public ok(): void {
 
-    if (this.option1selected) {
-      for (var i in this.sangreea._clusters) {
-        if (this.option1Cluster == this.sangreea._clusters[i]) {
-          console.log(this.sangreea._clusters[i].nodes);
-          this.sangreea._clusters[i].nodes[3] = this.sangreea._graph.getNodeById(this.decideBaseNode[0].id);
-          console.log(i);
-          console.log(this.sangreea._clusters[i]);
-          break; //Stop this loop, we found it!
-        }
-      }
-    } else {
-
-    }
-
+    /*  if (this.option1selected) {
+        this.calcNewRanges(this.option1Cluster, this.decideBaseNode);
+      } else {
+        this.calcNewRanges(this.option2Cluster, this.decideBaseNode);
+      }*/
     this.onOk.emit();
   }
 
