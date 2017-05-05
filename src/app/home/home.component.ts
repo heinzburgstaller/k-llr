@@ -25,6 +25,9 @@ import * as $A from 'anonymiationjs';
 })
 export class HomeComponent implements OnInit, AfterViewInit {
 
+  public static USER_QUERIES_PER_K: number = 1;
+  public static STOP_AT_K: number = 7;
+
   private adultReader: AdultReader = new AdultReader();
   private sangreea: SaNGreeA;
   private genHierarchies: Array<any> = [workclassGH, sexGH, faceGH,
@@ -50,6 +53,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   public valueRace: number = 50;
   public valueMarital: number = 50;
 
+  private userQueryCounter: number;
+
   constructor(private http: Http) {
     this.progressValue = 0;
   }
@@ -65,8 +70,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private configureSangreea(): void {
-    var config:ISaNGreeAConfig = $A.config.adults;
-    config.NR_DRAWS = this.adults.length * 0.5;
+    var config: ISaNGreeAConfig = $A.config.adults;
+    config.NR_DRAWS = this.adults.length;
     config.K_FACTOR = 2;
 
     this.sangreea = new $A.algorithms.Sangreea("testus", config);
@@ -76,16 +81,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.sangreea.setCatHierarchy(strgh._name, strgh);
     }
 
-    //debugger;
     this.sangreea.instantiateGraph(this.csvLines, false);
-    this.sangreea.anonymizeGraph();
-    //debugger;
+    this.sangreea.getConfig().K_FACTOR = 2;
+    this.sangreea.anonymizeGraph(72);
   }
 
   ngAfterViewInit() {
   }
 
   public startLearning(): void {
+    this.userQueryCounter = 0;
     this.showModal();
   }
 
@@ -107,6 +112,17 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   public onHidden(): void {
     this.isModalShown = false;
+    this.userQueryCounter++;
+    if (this.userQueryCounter == HomeComponent.USER_QUERIES_PER_K) {
+      this.sangreea.getConfig().K_FACTOR++;
+      this.userQueryCounter = 0;
+      console.log(this.sangreea.getConfig().K_FACTOR);
+      this.sangreea.updateCurrentClusters();
+      if (this.sangreea.getConfig().K_FACTOR == HomeComponent.STOP_AT_K) {
+        return;
+      }
+    }
+    setTimeout(() => this.showModal(), 300);
   }
 
 }
