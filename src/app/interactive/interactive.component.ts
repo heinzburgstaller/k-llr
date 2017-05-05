@@ -49,8 +49,8 @@ export class InteractiveComponent implements OnInit {
     this.option1Rows = this.getAdultGensFromCluster(this.option1Cluster);
     this.option2Cluster = this.selectRandomCluster(this.sangreea._clusters);
     this.option2Rows = this.getAdultGensFromCluster(this.option2Cluster);
-    let node = this.sangreea._graph.getRandomNode();
-    this.decideRows = [this.adults[node['_id']]];
+    let nodeId = this.sangreea.acquireUnaddedNodeId();
+    this.decideRows = [this.adults[nodeId]];
     this.decideBaseNode = this.decideRows;
 
     this.option1Costs = this.sangreea.calculateGIL(this.option1Cluster,
