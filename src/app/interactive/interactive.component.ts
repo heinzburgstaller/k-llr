@@ -87,7 +87,8 @@ export class InteractiveComponent implements OnInit {
       if (cluster.gen_ranges['hours-per-week'][0] == cluster.gen_ranges['hours-per-week'][1]) {
         ag.hours_per_week = cluster.gen_ranges['hours-per-week'][0];
       } else {
-        ag.hours_per_week = cluster.gen_ranges['hours-per-week'][0] + ' - ' + cluster.gen_ranges['hours-per-week'][1];
+        ag.hours_per_week = cluster.gen_ranges['hours-per-week'][0]
+          + ' - ' + cluster.gen_ranges['hours-per-week'][1];
       }
       adultGens.push(ag);
     }
@@ -129,7 +130,6 @@ export class InteractiveComponent implements OnInit {
   }
 
   public dragDropOption1(event: any) {
-
     var copyCluster = JSON.parse(JSON.stringify(this.option1Cluster));
 
     this.calcNewCluster(copyCluster, this.decideBaseNode);
@@ -161,7 +161,8 @@ export class InteractiveComponent implements OnInit {
     this.sangreea.updateLevels(Cl, this.sangreea._graph.getNodeById(decideBaseNode[0].id));
 
     Object.keys(this.sangreea._cont_hierarchies).forEach((range) => {
-      Cl.gen_ranges[range] = this.sangreea.expandRange(Cl.gen_ranges[range], this.sangreea._graph.getNodeById(decideBaseNode[0].id).getFeature(range));
+      Cl.gen_ranges[range] = this.sangreea.expandRange(Cl.gen_ranges[range],
+        this.sangreea._graph.getNodeById(decideBaseNode[0].id).getFeature(range));
     });
   }
 
@@ -173,7 +174,8 @@ export class InteractiveComponent implements OnInit {
         this.sangreea.updateLevels(this.sangreea._clusters[i], this.sangreea._graph.getNodeById(decideBaseNode[0].id));
 
         Object.keys(this.sangreea._cont_hierarchies).forEach((range) => {
-          this.sangreea._clusters[i].gen_ranges[range] = this.sangreea.expandRange(this.sangreea._clusters[i].gen_ranges[range], this.sangreea._graph.getNodeById(decideBaseNode[0].id).getFeature(range));
+          this.sangreea._clusters[i].gen_ranges[range] = this.sangreea.expandRange(this.sangreea._clusters[i].gen_ranges[range],
+            this.sangreea._graph.getNodeById(decideBaseNode[0].id).getFeature(range));
         });
         break;
       }
@@ -181,7 +183,6 @@ export class InteractiveComponent implements OnInit {
   }
 
   public ok(): void {
-
     if (this.option1selected) {
       this.calcNewClusterInSangreea(this.option1Cluster, this.decideBaseNode);
     } else {
