@@ -35,11 +35,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     maritalStatusGH, nativeCountryGH, relationshipGH, occupationGH, incomeGH];
   private csvLines: Array<string>
   private adults: Array<Adult> = [];
+  public isInteractive:boolean = false;
 
   public progressValue: number = 0;
-  @ViewChild('autoShownModal')
-  public autoShownModal: ModalDirective;
-  public isModalShown: boolean = false;
   @ViewChild(InteractiveComponent)
   public interactive: InteractiveComponent;
 
@@ -82,27 +80,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
   public startLearning(): void {
     this.userQueryCounter = 0;
     this.progressValue = 0;
-    this.showModal();
-  }
+    this.isInteractive = true;
 
-  public showModal(): void {
-    this.isModalShown = true;
-  }
-
-  onInteractiveOk() {
-    this.hideModal();
-  }
-
-  public hideModal(): void {
-    this.autoShownModal.hide();
-  }
-
-  public onShown(): void {
     this.interactive.configure(this.sangreea, this.adults);
   }
 
-  public onHidden(): void {
-    this.isModalShown = false;
+  onInteractiveOk() {
     this.userQueryCounter++;
     this.progressValue = this.progressValue +
       (100 / (HomeComponent.USER_QUERIES_PER_K * (HomeComponent.STOP_AT_K - 2)));
@@ -113,10 +96,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
       console.log(this.sangreea.getConfig().K_FACTOR);
       this.sangreea.updateCurrentClusters();
       if (this.sangreea.getConfig().K_FACTOR == HomeComponent.STOP_AT_K) {
+        this.isInteractive = false;
         return;
       }
     }
-    setTimeout(() => this.showModal(), 300);
+
+    this.interactive.configure(this.sangreea, this.adults);
   }
 
 }
