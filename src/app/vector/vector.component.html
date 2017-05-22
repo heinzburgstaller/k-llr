@@ -10,52 +10,52 @@
     <tr>
       <td>Age</td>
       <td><input type="range" min="1" max="100" [(ngModel)]="valueAge" (ngModelChange)="valueChange($event)"></td>
-      <td>{{adjustedAge}}</td>
+      <td>{{adjustedAge | number:'1.2-2'}}</td>
     </tr>
     <tr>
       <td>Education</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueEducation"></td>
-      <td>{{adjustedEducation}}</td>
+      <td><input type="range" min="1" max="100" [(ngModel)]="valueEducation" (ngModelChange)="valueChange($event)"></td>
+      <td>{{adjustedEducation | number:'1.2-2'}}</td>
     </tr>
     <tr>
       <td>h/week</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueWorkTime"></td>
-      <td></td>
+      <td><input type="range" min="1" max="100" [(ngModel)]="valueWorkTime" (ngModelChange)="valueChange($event)"></td>
+      <td>{{adjustedWorkTime | number:'1.2-2'}}</td>
     </tr>
     <tr>
       <td>Native Country</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueCountry"></td>
-      <td></td>
+      <td><input type="range" min="1" max="100" [(ngModel)]="valueCountry" (ngModelChange)="valueChange($event)"></td>
+      <td>{{adjustedCountry | number:'1.2-2'}}</td>
     </tr>
     <tr>
       <td>Sex</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueSex"></td>
-      <td></td>
+      <td><input type="range" min="1" max="100" [(ngModel)]="valueSex" (ngModelChange)="valueChange($event)"></td>
+      <td>{{adjustedSex | number:'1.2-2'}}</td>
     </tr>
     <tr>
       <td>Relationship</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueRelationship"></td>
-      <td></td>
+      <td><input type="range" min="1" max="100" [(ngModel)]="valueRelationship" (ngModelChange)="valueChange($event)"></td>
+      <td>{{adjustedRelationship | number:'1.2-2'}}</td>
     </tr>
     <tr>
       <td>Occupation</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueOccupation"></td>
-      <td></td>
+      <td><input type="range" min="1" max="100" [(ngModel)]="valueOccupation" (ngModelChange)="valueChange($event)"></td>
+      <td>{{adjustedOccupation | number:'1.2-2'}}</td>
     </tr>
     <tr>
       <td>Income</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueIncome"></td>
-      <td></td>
+      <td><input type="range" min="1" max="100" [(ngModel)]="valueIncome" (ngModelChange)="valueChange($event)"></td>
+      <td>{{adjustedIncome | number:'1.2-2'}}</td>
     </tr>
     <tr>
       <td>Race</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueRace"></td>
-      <td></td>
+      <td><input type="range" min="1" max="100" [(ngModel)]="valueRace" (ngModelChange)="valueChange($event)"></td>
+      <td>{{adjustedRace | number:'1.2-2'}}</td>
     </tr>
     <tr>
       <td>Marital status</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueMarital"></td>
-      <td></td>
+      <td><input type="range" min="1" max="100" [(ngModel)]="valueMarital" (ngModelChange)="valueChange($event)"></td>
+      <td>{{adjustedMarital | number:'1.2-2'}}</td>
     </tr>
   </tbody>
 </table>

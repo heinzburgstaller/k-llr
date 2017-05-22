@@ -41,6 +41,14 @@ export class VectorComponent implements OnInit {
       + this.valueIncome + this.valueRace + this.valueMarital;
     this.adjustedAge = this.valueAge / sum;
     this.adjustedEducation = this.valueEducation / sum;
+    this.adjustedWorkTime = this.valueWorkTime / sum;
+    this.adjustedCountry = this.valueCountry / sum;
+    this.adjustedSex = this.valueSex / sum;
+    this.adjustedRelationship = this.valueRelationship/ sum;
+    this.adjustedOccupation = this.valueOccupation / sum;
+    this.adjustedIncome = this.valueIncome / sum;
+    this.adjustedRace = this.valueRace / sum;
+    this.adjustedMarital = this.valueMarital / sum;
   }
 
 }
