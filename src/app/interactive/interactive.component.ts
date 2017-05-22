@@ -52,6 +52,8 @@ export class InteractiveComponent implements OnInit {
   public configure(s: SaNGreeA, a: Array<Adult>): void {
     this.sangreea = s;
     this.adults = a;
+    this.decidedRows1 = [];
+    this.decidedRows2 = [];
     this.anon();
   }
 
