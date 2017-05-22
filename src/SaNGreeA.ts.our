@@ -514,11 +514,15 @@ class SaNGreeA implements ISaNGreeA {
       return -1;
     }
 
+    if (Object.keys(this.added).length == Object.keys(this.nodes).length) {
+      return -1;
+    }
+
     var id = -1;
-    while (id == -1) {
-      let idGuess = Math.floor(Math.random() * this.nr_open);
-      if (!this.added[idGuess]) {
-        id = idGuess;
+    for (var i = 0; i < Object.keys(this.nodes).length; i++) {
+      if (!this.added[i]) {
+        id = i;
+        break;
       }
     }
 
@@ -760,4 +764,3 @@ class SaNGreeA implements ISaNGreeA {
 }
 
 export { SaNGreeA };
-
