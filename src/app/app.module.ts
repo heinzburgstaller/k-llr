@@ -7,6 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AlertModule } from 'ng2-bootstrap';
 import { ProgressbarModule } from 'ng2-bootstrap/progressbar';
 import { ModalModule } from 'ng2-bootstrap/modal';
+import { ButtonsModule } from 'ng2-bootstrap/buttons';
 
 import { DataTableModule } from "angular2-datatable";
 
@@ -48,6 +49,7 @@ const routes: Routes = [
     AlertModule.forRoot(),
     ProgressbarModule.forRoot(),
     ModalModule.forRoot(),
+    ButtonsModule.forRoot(),
     DataTableModule,
     DragulaModule,
     GaugeModule,

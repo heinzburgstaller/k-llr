@@ -29,17 +29,20 @@ export class HomeComponent implements OnInit, AfterViewInit {
   public static USER_QUERIES_PER_K: number = 1;
   public static STOP_AT_K: number = 7;
 
+  public radioModel: string = 'edu';
   private adultReader: AdultReader = new AdultReader();
   private sangreea: SaNGreeA;
   private genHierarchies: Array<any> = [workclassGH, sexGH, faceGH,
     maritalStatusGH, nativeCountryGH, relationshipGH, occupationGH, incomeGH];
   private csvLines: Array<string>
   private adults: Array<Adult> = [];
-  public isInteractive:boolean = false;
+  public isInteractive: boolean = false;
 
   public progressValue: number = 0;
   @ViewChild(InteractiveComponent)
   public interactive: InteractiveComponent;
+  @ViewChild('configModal')
+  public configModal: ModalDirective;
 
   private userQueryCounter: number;
 
@@ -77,7 +80,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
   }
 
+  public startConfig(): void {
+    this.configModal.show();
+  }
+
   public startLearning(): void {
+    this.configModal.hide();
+
     this.userQueryCounter = 0;
     this.progressValue = 0;
     this.isInteractive = true;

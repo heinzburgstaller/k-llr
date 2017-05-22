@@ -1,18 +1,33 @@
 <div class="container theme-showcase" role="main">
 
-  <div class="page-header">
-    <h1>Interactive Machine Learning</h1>
+  <div class="page-header" [hidden]="isInteractive">
+    <h3>Interactive Machine Learning</h3>
   </div>
 
+  <!--
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-xs-12">
       <p>By starting the machine learning you will be shown alerts, where you should
         decide!
       </p>
     </div>
-    <div class="col-md-6">
-      <button type="button" class="btn btn-primary" (click)="startLearning()">Start machine learning</button>
+  </div>
+-->
+
+  <div class="row" [hidden]="isInteractive">
+    <div class="col-xs-12">
+      <button type="button" class="btn btn-primary" (click)="startConfig()">Start interactive machine learning</button>
+      <!--
       <button type="button" class="btn btn-default" (click)="staticModal.show()">Edit vector...</button>
+    -->
+    </div>
+  </div>
+
+  <div [hidden]="!isInteractive" class="row margin-top-05">
+    <div class="col-md-12">
+      <progressbar class="progress-striped active" [value]="progressValue" type="success"
+        max="100">
+      </progressbar>
     </div>
   </div>
 
@@ -22,28 +37,30 @@
     </div>
   </div>
 
-  <div class="row margin-top-05">
-    <div class="col-md-12">
-      <progressbar class="progress-striped active" [value]="progressValue" type="success"
-        max="100">
-      </progressbar>
-    </div>
-  </div>
-
 </div>
 
-<div class="modal fade" bsModal #staticModal="bs-modal" [config]="{backdrop: 'static'}"
+<div class="modal fade" bsModal #configModal="bs-modal" [config]="{backdrop: 'static'}"
   tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title pull-left">Custom weight vector</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="staticModal.hide()">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <h4 class="modal-title pull-left">Configure...</h4>
       </div>
       <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <label>Target</label>
+            <div class="btn-group">
+              <label class="btn btn-success" [(ngModel)]="radioModel" btnRadio="edu">Education Num.</label>
+              <label class="btn btn-success" [(ngModel)]="radioModel" btnRadio="marital">Marital status</label>
+              <label class="btn btn-success" [(ngModel)]="radioModel" btnRadio="income">Income</label>
+            </div>
+          </div>
+        </div>
         <app-vector></app-vector>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="startLearning()">OK</button>
       </div>
     </div>
   </div>
