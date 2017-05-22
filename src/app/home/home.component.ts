@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private csvLines: Array<string>
   private adults: Array<Adult> = [];
 
-  public progressValue: number = 50;
+  public progressValue: number = 0;
   @ViewChild('autoShownModal')
   public autoShownModal: ModalDirective;
   public isModalShown: boolean = false;
@@ -81,6 +81,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   public startLearning(): void {
     this.userQueryCounter = 0;
+    this.progressValue = 0;
     this.showModal();
   }
 
@@ -103,6 +104,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   public onHidden(): void {
     this.isModalShown = false;
     this.userQueryCounter++;
+    this.progressValue = this.progressValue +
+      (100 / (HomeComponent.USER_QUERIES_PER_K * (HomeComponent.STOP_AT_K - 2)));
+
     if (this.userQueryCounter == HomeComponent.USER_QUERIES_PER_K) {
       this.sangreea.getConfig().K_FACTOR++;
       this.userQueryCounter = 0;
