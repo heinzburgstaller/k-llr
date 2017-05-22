@@ -3,6 +3,7 @@ import { Http, Response } from '@angular/http';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { InteractiveComponent } from '../interactive/interactive.component';
+import { VectorComponent } from '../vector/vector.component';
 import { SaNGreeA, StringGenHierarchy, ISaNGreeAConfig } from 'anonymiationjs';
 import { Adult, AdultGen } from '../adult';
 import { ReaderCallback, AdultReader } from '../adultReader';
@@ -41,17 +42,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   public isModalShown: boolean = false;
   @ViewChild(InteractiveComponent)
   public interactive: InteractiveComponent;
-
-  public valueAge: number = 50;
-  public valueEducation: number = 50;
-  public valueWorkTime: number = 50;
-  public valueCountry: number = 50;
-  public valueSex: number = 50;
-  public valueRelationship: number = 50;
-  public valueOccupation: number = 50;
-  public valueIncome: number = 50;
-  public valueRace: number = 50;
-  public valueMarital: number = 50;
 
   private userQueryCounter: number;
 

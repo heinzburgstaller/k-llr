@@ -21,6 +21,7 @@ import { DragulaModule } from 'ng2-dragula';
 import { GaugeModule } from 'ng2-kw-gauge';
 
 import { DndModule } from 'ng2-dnd';
+import { VectorComponent } from './vector/vector.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -36,7 +37,8 @@ const routes: Routes = [
     HomeComponent,
     ThemeComponent,
     InteractiveComponent,
-    ChooseAnonComponent
+    ChooseAnonComponent,
+    VectorComponent
   ],
   imports: [
     BrowserModule,

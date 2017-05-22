@@ -6,56 +6,7 @@
 
   <div class="row">
     <div class="col-xs-12 col-sm-9 col-md-6">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th style="width: 35%">Column</th>
-            <th style="width: 65%">Manual weight vector</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Age</td>
-            <td><input type="range" min="0" max="100" [(ngModel)]="valueAge"></td>
-          </tr>
-          <tr>
-            <td>Education</td>
-            <td><input type="range" min="0" max="100" [(ngModel)]="valueEducation"></td>
-          </tr>
-          <tr>
-            <td>h/week</td>
-            <td><input type="range" min="0" max="100" [(ngModel)]="valueWorkTime"></td>
-          </tr>
-          <tr>
-            <td>Native Country</td>
-            <td><input type="range" min="0" max="100" [(ngModel)]="valueCountry"></td>
-          </tr>
-          <tr>
-            <td>Sex</td>
-            <td><input type="range" min="0" max="100" [(ngModel)]="valueSex"></td>
-          </tr>
-          <tr>
-            <td>Relationship</td>
-            <td><input type="range" min="0" max="100" [(ngModel)]="valueRelationship"></td>
-          </tr>
-          <tr>
-            <td>Occupation</td>
-            <td><input type="range" min="0" max="100" [(ngModel)]="valueOccupation"></td>
-          </tr>
-          <tr>
-            <td>Income</td>
-            <td><input type="range" min="0" max="100" [(ngModel)]="valueIncome"></td>
-          </tr>
-          <tr>
-            <td>Race</td>
-            <td><input type="range" min="0" max="100" [(ngModel)]="valueRace"></td>
-          </tr>
-          <tr>
-            <td>Marital status</td>
-            <td><input type="range" min="0" max="100" [(ngModel)]="valueMarital"></td>
-          </tr>
-        </tbody>
-      </table>
+      <app-vector></app-vector>
     </div>
   </div>
 
