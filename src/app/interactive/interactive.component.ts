@@ -28,6 +28,19 @@ export class InteractiveComponent implements OnInit {
   private option2Costs: number;
   private option1selected: boolean = false;
 
+  private colorAge: any;
+  private colorEducation: any;
+  private colorHours: any;
+  private colorCountry: any;
+  private colorSex: any;
+  private colorRelation: any;
+  private colorOccupation: any;
+  private colorIncome: any;
+  private colorRace: any;
+  private colorMartial: any;
+
+  private colorList: Array<String> = ["bg-success", "bg-warning", "bg-warning", "bg-danger"];
+
   @Output() onOk = new EventEmitter<any>();
 
   constructor() {
@@ -130,6 +143,8 @@ export class InteractiveComponent implements OnInit {
   }
 
   public dragDropOption1(event: any) {
+      if (this.decidedRows1.length <= this.decidedRows2.length) {
+
     var copyCluster = JSON.parse(JSON.stringify(this.option1Cluster));
 
     this.calcNewCluster(copyCluster, this.decideBaseNode);
@@ -140,9 +155,13 @@ export class InteractiveComponent implements OnInit {
     this.decidedRows2 = [];
 
     this.option1selected = true;
+    this.updateColors(this.option1Cluster, this.decideBaseNode);
+      }
   }
 
   public dragDropOption2(event: any) {
+      if (this.decidedRows2.length <= this.decidedRows1.length) {
+
     var copyCluster = JSON.parse(JSON.stringify(this.option2Cluster));
 
     this.calcNewCluster(copyCluster, this.decideBaseNode);
@@ -152,12 +171,35 @@ export class InteractiveComponent implements OnInit {
     this.decidedRows1 = [];
 
     this.option1selected = false;
+    this.updateColors(this.option2Cluster, this.decideBaseNode);
+      }
+  }
+
+  private updateColors(Cl: any, decideBaseNode: Array<Adult>): void {
+    console.log("Update Colors");
+    console.log(Cl.gen_ranges);
+    console.log(decideBaseNode[0]);
+    this.colorAge = this.colorList[this.compareRange(Cl.gen_ranges.age, decideBaseNode[0]['age'])];
+    this.colorEducation = this.colorList[this.compareRange(Cl.gen_ranges.education, decideBaseNode[0]['education'])];
+    this.colorHours = this.colorList[this.compareRange(Cl.gen_ranges['hours-per-week'], decideBaseNode[0]['hours_per_week'])];
+  }
+
+  private compareRange(range: Array<number>, value: number): number {
+    if (range == null)
+      return 0;
+
+    if (range[1] >= value && range[0] <= value)
+      return 0;
+    if (range[1] * 1.11 >= value && range[0] * 0.9 <= value)
+      return 1;
+    if (range[1] * 1.33 >= value && range[0] * 0.75 <= value)
+      return 2;
+
+    return 3;
   }
 
   private calcNewCluster(Cl: any, decideBaseNode: Array<Adult>): void {
-
     Cl.nodes[decideBaseNode[0].id] = this.sangreea._graph.getNodeById(decideBaseNode[0].id);
-    console.log("UUUUUUUUU");
     this.sangreea.updateLevels(Cl, this.sangreea._graph.getNodeById(decideBaseNode[0].id));
 
     Object.keys(this.sangreea._cont_hierarchies).forEach((range) => {
@@ -170,7 +212,6 @@ export class InteractiveComponent implements OnInit {
     for (var i in this.sangreea._clusters) {
       if (Cl == this.sangreea._clusters[i]) {
         this.sangreea._clusters[i].nodes[decideBaseNode[0].id] = this.sangreea._graph.getNodeById(decideBaseNode[0].id);
-        console.log("UUUUUUUUU");
         this.sangreea.updateLevels(this.sangreea._clusters[i], this.sangreea._graph.getNodeById(decideBaseNode[0].id));
 
         Object.keys(this.sangreea._cont_hierarchies).forEach((range) => {

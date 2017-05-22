@@ -1,158 +1,145 @@
-<div class="modal-content">
-
-  <div class="modal-body">
-    <div class="alert alert-warning" role="alert">
-      <strong>Decide!</strong> Which anonymisation fits better? Drag the Entry to
-      your favoured option.
+<div class="alert alert-warning" role="alert">
+  <strong>Decide!</strong> Which anonymisation fits better? Drag the Entry to your favoured option.
+</div>
+<div class="row">
+  <div class="col-xs-10">
+    <div>
+      <h4>Option 1</h4>
+      <table dnd-droppable class="table table-striped" [mfData]="option1Rows" #mf1="mfDataTable" (onDragStart)="dragStart($event)" (onDragLeave)="dragLeave($event)" (onDragOver)="dragOverOption1($event)" (onDropSuccess)="dragDropOption1($event)">
+        <thead>
+          <tr>
+            <th style="width: 8%">Age</th>
+            <th style="width: 5%">Edu.</th>
+            <th style="width: 5%">h/week</th>
+            <th style="width: 15%">Native Country</th>
+            <th style="width: 5%">Sex</th>
+            <th style="width: 15%">Relationship</th>
+            <th style="width: 12%">Occupation</th>
+            <th style="width: 10%">Income</th>
+            <th style="width: 10%">Race</th>
+            <th style="width: 15%">Marital status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of mf1.data">
+            <td style="text-align: right">{{item.age}}</td>
+            <td style="text-align: right">{{item.education_num}}</td>
+            <td style="text-align: right">{{item.hours_per_week}}</td>
+            <td>{{item.native_country}}</td>
+            <td>{{item.sex}}</td>
+            <td>{{item.relationship}}</td>
+            <td>{{item.occupation}}</td>
+            <td>{{item.income}}</td>
+            <td>{{item.race}}</td>
+            <td>{{item.marital_status}}</td>
+          </tr>
+          <tr *ngFor="let item of decidedRows1" dnd-draggable>
+            <td [ngClass]="colorAge" style="text-align: right">{{item.age}}</td>
+            <td [ngClass]="colorEducation" style="text-align: right">{{item.education_num}}</td>
+            <td [ngClass]="colorHours" style="text-align: right">{{item.hours_per_week}}</td>
+            <td [ngClass]="colorCountry">{{item.native_country}}</td>
+            <td [ngClass]="colorSex">{{item.sex}}</td>
+            <td [ngClass]="colorRelation">{{item.relationship}}</td>
+            <td [ngClass]="colorOccupation">{{item.occupation}}</td>
+            <td [ngClass]="colorIncome">{{item.income}}</td>
+            <td [ngClass]="colorRace">{{item.race}}</td>
+            <td [ngClass]="colorMartial">{{item.marital_status}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="row">
-      <div class="col-xs-10">
-        <div>
-          <h4>Option 1</h4>
-          <table dnd-droppable class="table table-striped" [mfData]="option1Rows" #mf1="mfDataTable"
-              (onDragStart)="dragStart($event)" (onDragLeave)="dragLeave($event)" (onDragOver)="dragOverOption1($event)"
-              (onDropSuccess)="dragDropOption1($event)">
-            <thead>
-              <tr>
-                <th style="width: 8%">Age</th>
-                <th style="width: 5%">Edu.</th>
-                <th style="width: 5%">h/week</th>
-                <th style="width: 15%">Native Country</th>
-                <th style="width: 5%">Sex</th>
-                <th style="width: 15%">Relationship</th>
-                <th style="width: 12%">Occupation</th>
-                <th style="width: 10%">Income</th>
-                <th style="width: 10%">Race</th>
-                <th style="width: 15%">Marital status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of mf1.data">
-                <td style="text-align: right">{{item.age}}</td>
-                <td style="text-align: right">{{item.education_num}}</td>
-                <td style="text-align: right">{{item.hours_per_week}}</td>
-                <td>{{item.native_country}}</td>
-                <td>{{item.sex}}</td>
-                <td>{{item.relationship}}</td>
-                <td>{{item.occupation}}</td>
-                <td>{{item.income}}</td>
-                <td>{{item.race}}</td>
-                <td>{{item.marital_status}}</td>
-              </tr>
-              <tr *ngFor="let item of decidedRows1"  dnd-draggable>
-                <td style="text-align: right" id="blabla">{{item.age}}</td>
-                <td style="text-align: right">{{item.education_num}}</td>
-                <td style="text-align: right">{{item.hours_per_week}}</td>
-                <td>{{item.native_country}}</td>
-                <td>{{item.sex}}</td>
-                <td>{{item.relationship}}</td>
-                <td>{{item.occupation}}</td>
-                <td>{{item.income}}</td>
-                <td>{{item.race}}</td>
-                <td>{{item.marital_status}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="col-xs-2">
-        <ng2-kw-gauge [bgRadius]=progressGraph1.bgRadius [bgColor]=progressGraph1.bgColor
-            [rounded]=progressGraph1.rounded [reverse]=progressGraph1.reverse [animationSecs]=progressGraph1.animationSecs
-            [labels]=progressGraph1.labels [segments]=progressGraph1.segments>
-        </ng2-kw-gauge>
-      </div>
-    </div>
+  </div>
+  <div class="col-xs-2">
+    <ng2-kw-gauge [bgRadius]=progressGraph1.bgRadius [bgColor]=progressGraph1.bgColor [rounded]=progressGraph1.rounded [reverse]=progressGraph1.reverse [animationSecs]=progressGraph1.animationSecs [labels]=progressGraph1.labels [segments]=progressGraph1.segments>
+    </ng2-kw-gauge>
+  </div>
+</div>
 
-    <div *ngIf="decideRows.length > 0">
-      <div class="row">
-        <div class="col-xs-10">
-          <div class="arrow-center"><span class="glyphicon glyphicon-arrow-up"></span></div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-xs-10">
-          <table dnd-draggable [dragEnabled]="true" class="table" [mfData]="decideRows" #mfDecide="mfDataTable">
-            <tbody>
-              <tr *ngFor="let item of mfDecide.data" class="success">
-                <td style="width: 8%; text-align: right">{{item.age}}</td>
-                <td style="width: 5%; text-align: right">{{item.education_num}}</td>
-                <td style="width: 5%; text-align: right">{{item.hours_per_week}}</td>
-                <td style="width: 15%">{{item.native_country}}</td>
-                <td style="width: 5%">{{item.sex}}</td>
-                <td style="width: 15%">{{item.relationship}}</td>
-                <td style="width: 12%">{{item.occupation}}</td>
-                <td style="width: 10%">{{item.income}}</td>
-                <td style="width: 10%">{{item.race}}</td>
-                <td style="width: 15%">{{item.marital_status}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-xs-10">
-          <div class="arrow-center"><span class="glyphicon glyphicon-arrow-down"></span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-xs-10">
-        <div>
-          <h4>Option 2</h4>
-          <table dnd-droppable class="table table-striped" [mfData]="option2Rows" #mf2="mfDataTable"
-              (onDragStart)="dragStart($event)" (onDragLeave)="dragLeave($event)" (onDragOver)="dragOverOption2($event)"
-              (onDropSuccess)="dragDropOption2($event)">
-            <thead>
-              <tr>
-                <th style="width: 8%">Age</th>
-                <th style="width: 5%">Edu.</th>
-                <th style="width: 5%">h/week</th>
-                <th style="width: 15%">Native Country</th>
-                <th style="width: 5%">Sex</th>
-                <th style="width: 15%">Relationship</th>
-                <th style="width: 12%">Occupation</th>
-                <th style="width: 10%">Income</th>
-                <th style="width: 10%">Race</th>
-                <th style="width: 15%">Marital status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of mf2.data">
-                <td style="text-align: right">{{item.age}}</td>
-                <td style="text-align: right">{{item.education_num}}</td>
-                <td style="text-align: right">{{item.hours_per_week}}</td>
-                <td>{{item.native_country}}</td>
-                <td>{{item.sex}}</td>
-                <td>{{item.relationship}}</td>
-                <td>{{item.occupation}}</td>
-                <td>{{item.income}}</td>
-                <td>{{item.race}}</td>
-                <td>{{item.marital_status}}</td>
-              </tr>
-              <tr *ngFor="let item of decidedRows2" class="success" dnd-draggable>
-                <td style="text-align: right">{{item.age}}</td>
-                <td style="text-align: right">{{item.education_num}}</td>
-                <td style="text-align: right">{{item.hours_per_week}}</td>
-                <td>{{item.native_country}}</td>
-                <td>{{item.sex}}</td>
-                <td>{{item.relationship}}</td>
-                <td>{{item.occupation}}</td>
-                <td>{{item.income}}</td>
-                <td>{{item.race}}</td>
-                <td>{{item.marital_status}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+<div *ngIf="decideRows.length > 0">
+  <div class="row">
+    <div class="col-xs-10">
+      <div class="arrow-center"><span class="glyphicon glyphicon-arrow-up"></span></div>
     </div>
   </div>
 
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="ok()">OK</button>
+  <div class="row">
+    <div class="col-xs-10">
+      <table dnd-draggable [dragEnabled]="true" class="table" [mfData]="decideRows" #mfDecide="mfDataTable">
+        <tbody>
+          <tr *ngFor="let item of mfDecide.data" class="success">
+            <td style="width: 8%; text-align: right">{{item.age}}</td>
+            <td style="width: 5%; text-align: right">{{item.education_num}}</td>
+            <td style="width: 5%; text-align: right">{{item.hours_per_week}}</td>
+            <td style="width: 15%">{{item.native_country}}</td>
+            <td style="width: 5%">{{item.sex}}</td>
+            <td style="width: 15%">{{item.relationship}}</td>
+            <td style="width: 12%">{{item.occupation}}</td>
+            <td style="width: 10%">{{item.income}}</td>
+            <td style="width: 10%">{{item.race}}</td>
+            <td style="width: 15%">{{item.marital_status}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
+  <div class="row">
+    <div class="col-xs-10">
+      <div class="arrow-center"><span class="glyphicon glyphicon-arrow-down"></span></div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-10">
+    <div>
+      <h4>Option 2</h4>
+      <table dnd-droppable class="table table-striped" [mfData]="option2Rows" #mf2="mfDataTable" (onDragStart)="dragStart($event)" (onDragLeave)="dragLeave($event)" (onDragOver)="dragOverOption2($event)" (onDropSuccess)="dragDropOption2($event)">
+        <thead>
+          <tr>
+            <th style="width: 8%">Age</th>
+            <th style="width: 5%">Edu.</th>
+            <th style="width: 5%">h/week</th>
+            <th style="width: 15%">Native Country</th>
+            <th style="width: 5%">Sex</th>
+            <th style="width: 15%">Relationship</th>
+            <th style="width: 12%">Occupation</th>
+            <th style="width: 10%">Income</th>
+            <th style="width: 10%">Race</th>
+            <th style="width: 15%">Marital status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of mf2.data">
+            <td style="text-align: right">{{item.age}}</td>
+            <td style="text-align: right">{{item.education_num}}</td>
+            <td style="text-align: right">{{item.hours_per_week}}</td>
+            <td>{{item.native_country}}</td>
+            <td>{{item.sex}}</td>
+            <td>{{item.relationship}}</td>
+            <td>{{item.occupation}}</td>
+            <td>{{item.income}}</td>
+            <td>{{item.race}}</td>
+            <td>{{item.marital_status}}</td>
+          </tr>
+          <tr *ngFor="let item of decidedRows2" dnd-draggable>
+            <td [ngClass]="colorAge" style="text-align: right">{{item.age}}</td>
+            <td [ngClass]="colorEducation" style="text-align: right">{{item.education_num}}</td>
+            <td [ngClass]="colorHours" style="text-align: right">{{item.hours_per_week}}</td>
+            <td [ngClass]="colorCountry">{{item.native_country}}</td>
+            <td [ngClass]="colorSex">{{item.sex}}</td>
+            <td [ngClass]="colorRelation">{{item.relationship}}</td>
+            <td [ngClass]="colorOccupation">{{item.occupation}}</td>
+            <td [ngClass]="colorIncome">{{item.income}}</td>
+            <td [ngClass]="colorRace">{{item.race}}</td>
+            <td [ngClass]="colorMartial">{{item.marital_status}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div>
+  <button type="button" class="btn btn-primary" (click)="ok()">OK</button>
 </div>
