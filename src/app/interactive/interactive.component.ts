@@ -217,18 +217,28 @@ export class InteractiveComponent implements OnInit {
 
   private compareRange(range: Array<number>, value: number): Array<number> {
     if (range == null)
-      return [0,0];
+      return [0, 0];
 
+    var relative_costs = 0;
 
-/*
-    if (range[1] >= value && range[0] <= value)
-      return 0;
-    if (range[1] * 1.11 >= value && range[0] * 0.9 <= value)
-      return 1;
-    if (range[1] * 1.33 >= value && range[0] * 0.75 <= value)
-      return 2;*/
+    if (value > range[1]) {
+      relative_costs = value / range[1];
+      if (value < range[1] * 1.11)
+        return [1, relative_costs];
+      if (value < range[1] * 1.33)
+        return [2, relative_costs];
+      return [3, relative_costs];
+    }
+    if (value < range[0]) {
+      relative_costs = range[0] / value;
+      if (value > range[0] * 0.9)
+        return [1, relative_costs];
+      if (value > range[0] * 0.75)
+        return [2, relative_costs];
+      return [3, relative_costs];
+    }
 
-    //return 3;
+    return [3,relative_costs];
   }
 
   private compareHierachy(Cl: any, decideBaseNode: Array<Adult>, feature: any): Array<number> {
@@ -242,7 +252,7 @@ export class InteractiveComponent implements OnInit {
     var Y_level = cat_gh.getLevelEntry(Y_feat);
     var old_level = Cl_level;
     if (Cl_level == null || Y_level == null)
-      return [0,0];
+      return [0, 0];
 
     while (Cl_feat !== Y_feat) {
       Y_feat = cat_gh.getGeneralizationOf(Y_feat);
@@ -257,12 +267,12 @@ export class InteractiveComponent implements OnInit {
     var relative_level_change = level_difference / cat_gh._nr_levels;
 
     if (relative_level_change == 0)
-      return [0,relative_level_change];
+      return [0, relative_level_change];
     if (relative_level_change < 0.33)
-      return [1,relative_level_change];
+      return [1, relative_level_change];
     if (relative_level_change < 0.66)
-      return [2,relative_level_change];
-    return [3,relative_level_change];
+      return [2, relative_level_change];
+    return [3, relative_level_change];
   }
 
   private calcNewCluster(Cl: any, decideBaseNode: Array<Adult>): void {
