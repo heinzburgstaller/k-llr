@@ -46,6 +46,7 @@
             <th style="width: 10%">Income</th>
             <th style="width: 10%">Race</th>
             <th style="width: 15%">Marital status</th>
+            <th style="width: 15%">Working Class</th>
           </tr>
         </thead>
         <tbody>
@@ -60,6 +61,7 @@
             <td>{{item.income}}</td>
             <td>{{item.race}}</td>
             <td>{{item.marital_status}}</td>
+            <td>{{item.workclass}}</td>
           </tr>
           <tr *ngFor="let item of decidedRows1" dnd-draggable>
             <td [ngClass]="colorAge" style="text-align: right">{{item.age}}</td>
@@ -72,6 +74,7 @@
             <td [ngClass]="colorIncome">{{item.income}}</td>
             <td [ngClass]="colorRace">{{item.race}}</td>
             <td [ngClass]="colorMartial">{{item.marital_status}}</td>
+            <td [ngClass]="colorWorkclass">{{item.workclass}}</td>
           </tr>
         </tbody>
       </table>
@@ -107,6 +110,7 @@
             <td style="width: 10%">{{item.income}}</td>
             <td style="width: 10%">{{item.race}}</td>
             <td style="width: 15%">{{item.marital_status}}</td>
+            <td style="width: 15%">{{item.workclass}}</td>
           </tr>
         </tbody>
       </table>
@@ -139,6 +143,7 @@
             <th style="width: 10%">Income</th>
             <th style="width: 10%">Race</th>
             <th style="width: 15%">Marital status</th>
+            <th style="width: 15%">Working Class</th>
           </tr>
         </thead>
         <tbody>
@@ -153,6 +158,7 @@
             <td>{{item.income}}</td>
             <td>{{item.race}}</td>
             <td>{{item.marital_status}}</td>
+            <td>{{item.workclass}}</td>
           </tr>
           <tr *ngFor="let item of decidedRows2" dnd-draggable>
             <td [ngClass]="colorAge" style="text-align: right">{{item.age}}</td>
@@ -165,6 +171,7 @@
             <td [ngClass]="colorIncome">{{item.income}}</td>
             <td [ngClass]="colorRace">{{item.race}}</td>
             <td [ngClass]="colorMartial">{{item.marital_status}}</td>
+            <td [ngClass]="colorWorkclass">{{item.workclass}}</td>
           </tr>
         </tbody>
       </table>

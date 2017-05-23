@@ -40,6 +40,7 @@ export class InteractiveComponent implements OnInit {
   private colorIncome: any;
   private colorRace: any;
   private colorMartial: any;
+  private colorWorkclass: any;
 
   private colorList: Array<String> = ["bg-success", "bg-warning", "bg-warning", "bg-danger"];
 
@@ -95,6 +96,7 @@ export class InteractiveComponent implements OnInit {
       ag.race = cluster.gen_feat['race'];
       ag.sex = cluster.gen_feat['sex'];
       ag.workclass = cluster.gen_feat['workclass'];
+      console.log("WORKING: "+ag.workclass);
       ag.relationship = cluster.gen_feat['relationship'];
       console.log(cluster.gen_ranges);
       if (cluster.gen_ranges.age[0] == cluster.gen_ranges.age[1]) {
@@ -212,6 +214,9 @@ export class InteractiveComponent implements OnInit {
     this.colorRace = this.colorList[race_cost[0]];
     var martial_cost = this.compareHierachy(Cl, decideBaseNode, 'marital-status')
     this.colorMartial = this.colorList[martial_cost[0]];
+    var workclass_cost = this.compareHierachy(Cl, decideBaseNode, 'workclass')
+    this.colorWorkclass = this.colorList[workclass_cost[0]];
+    console.log(workclass_cost[0]);
 
   }
 
@@ -254,6 +259,9 @@ export class InteractiveComponent implements OnInit {
     if (Cl_level == null || Y_level == null)
       return [0, 0];
 
+    console.log(feature +" "+Y_level + " "+Cl_level);
+    console.log(decideBaseNode);
+
     while (Cl_feat !== Y_feat) {
       Y_feat = cat_gh.getGeneralizationOf(Y_feat);
       Y_level = cat_gh.getLevelEntry(Y_feat);
@@ -265,7 +273,7 @@ export class InteractiveComponent implements OnInit {
 
     var level_difference = old_level - Cl_level;
     var relative_level_change = level_difference / cat_gh._nr_levels;
-
+    console.log("Relative level change: " + relative_level_change);
     if (relative_level_change == 0)
       return [0, relative_level_change];
     if (relative_level_change < 0.33)
