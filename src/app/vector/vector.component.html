@@ -1,61 +1,83 @@
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th style="width: 35%">Column</th>
-      <th style="width: 40%">Manual weight vector</th>
-      <th style="width: 25%">Adjusted Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Age</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueAge" (ngModelChange)="valueChange($event)"></td>
-      <td>{{adjustedAge | number:'1.2-2'}}</td>
-    </tr>
-    <tr>
-      <td>Education</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueEducation" (ngModelChange)="valueChange($event)"></td>
-      <td>{{adjustedEducation | number:'1.2-2'}}</td>
-    </tr>
-    <tr>
-      <td>h/week</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueWorkTime" (ngModelChange)="valueChange($event)"></td>
-      <td>{{adjustedWorkTime | number:'1.2-2'}}</td>
-    </tr>
-    <tr>
-      <td>Native Country</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueCountry" (ngModelChange)="valueChange($event)"></td>
-      <td>{{adjustedCountry | number:'1.2-2'}}</td>
-    </tr>
-    <tr>
-      <td>Sex</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueSex" (ngModelChange)="valueChange($event)"></td>
-      <td>{{adjustedSex | number:'1.2-2'}}</td>
-    </tr>
-    <tr>
-      <td>Relationship</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueRelationship" (ngModelChange)="valueChange($event)"></td>
-      <td>{{adjustedRelationship | number:'1.2-2'}}</td>
-    </tr>
-    <tr>
-      <td>Occupation</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueOccupation" (ngModelChange)="valueChange($event)"></td>
-      <td>{{adjustedOccupation | number:'1.2-2'}}</td>
-    </tr>
-    <tr>
-      <td>Income</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueIncome" (ngModelChange)="valueChange($event)"></td>
-      <td>{{adjustedIncome | number:'1.2-2'}}</td>
-    </tr>
-    <tr>
-      <td>Race</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueRace" (ngModelChange)="valueChange($event)"></td>
-      <td>{{adjustedRace | number:'1.2-2'}}</td>
-    </tr>
-    <tr>
-      <td>Marital status</td>
-      <td><input type="range" min="1" max="100" [(ngModel)]="valueMarital" (ngModelChange)="valueChange($event)"></td>
-      <td>{{adjustedMarital | number:'1.2-2'}}</td>
-    </tr>
-  </tbody>
-</table>
+<div class="row">
+  <div class="col-xs-12">
+    <label>Target</label>
+    <div class="btn-group">
+      <label class="btn btn-success" [(ngModel)]="radioModel" btnRadio="edu" (ngModelChange)="valueChange($event)">Education Num.</label>
+      <label class="btn btn-success" [(ngModel)]="radioModel" btnRadio="marital" (ngModelChange)="valueChange($event)">Marital status</label>
+      <label class="btn btn-success" [(ngModel)]="radioModel" btnRadio="income" (ngModelChange)="valueChange($event)">Income</label>
+    </div>
+  </div>
+</div>
+
+<hr />
+
+<div class="row">
+  <div class="col-xs-12">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th style="width: 35%">Column</th>
+          <th style="width: 40%">Manual weight vector</th>
+          <th style="width: 25%">Adjusted Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Age</td>
+          <td><input type="range" min="1" max="100" [(ngModel)]="valueAge" (ngModelChange)="valueChange($event)"></td>
+          <td>{{adjustedAge | number:'1.2-2'}}</td>
+        </tr>
+        <tr *ngIf="radioModel == 'edu' ? false : true">
+          <td>Education</td>
+          <td><input type="range" min="1" max="100" [(ngModel)]="valueEducation" (ngModelChange)="valueChange($event)"></td>
+          <td>{{adjustedEducation | number:'1.2-2'}}</td>
+        </tr>
+        <tr>
+          <td>h/week</td>
+          <td><input type="range" min="1" max="100" [(ngModel)]="valueWorkTime" (ngModelChange)="valueChange($event)"></td>
+          <td>{{adjustedWorkTime | number:'1.2-2'}}</td>
+        </tr>
+        <tr>
+          <td>Native Country</td>
+          <td><input type="range" min="1" max="100" [(ngModel)]="valueCountry" (ngModelChange)="valueChange($event)"></td>
+          <td>{{adjustedCountry | number:'1.2-2'}}</td>
+        </tr>
+        <tr>
+          <td>Sex</td>
+          <td><input type="range" min="1" max="100" [(ngModel)]="valueSex" (ngModelChange)="valueChange($event)"></td>
+          <td>{{adjustedSex | number:'1.2-2'}}</td>
+        </tr>
+        <tr>
+          <td>Relationship</td>
+          <td><input type="range" min="1" max="100" [(ngModel)]="valueRelationship" (ngModelChange)="valueChange($event)"></td>
+          <td>{{adjustedRelationship | number:'1.2-2'}}</td>
+        </tr>
+        <tr>
+          <td>Occupation</td>
+          <td><input type="range" min="1" max="100" [(ngModel)]="valueOccupation" (ngModelChange)="valueChange($event)"></td>
+          <td>{{adjustedOccupation | number:'1.2-2'}}</td>
+        </tr>
+        <tr *ngIf="radioModel == 'income' ? false : true">
+          <td>Income</td>
+          <td><input type="range" min="1" max="100" [(ngModel)]="valueIncome" (ngModelChange)="valueChange($event)"></td>
+          <td>{{adjustedIncome | number:'1.2-2'}}</td>
+        </tr>
+        <tr>
+          <td>Race</td>
+          <td><input type="range" min="1" max="100" [(ngModel)]="valueRace" (ngModelChange)="valueChange($event)"></td>
+          <td>{{adjustedRace | number:'1.2-2'}}</td>
+        </tr>
+        <tr>
+          <td>Work class</td>
+          <td><input type="range" min="1" max="100" [(ngModel)]="valueWorkclass" (ngModelChange)="valueChange($event)"></td>
+          <td>{{adjustedWorkclass | number:'1.2-2'}}</td>
+        </tr>
+        <tr *ngIf="radioModel == 'marital' ? false : true">
+          <td>Marital status</td>
+          <td><input type="range" min="1" max="100" [(ngModel)]="valueMarital" (ngModelChange)="valueChange($event)"></td>
+          <td>{{adjustedMarital | number:'1.2-2'}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

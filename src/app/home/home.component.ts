@@ -29,7 +29,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   public static USER_QUERIES_PER_K: number = 1;
   public static STOP_AT_K: number = 7;
 
-  public radioModel: string = 'edu';
   private adultReader: AdultReader = new AdultReader();
   private sangreea: SaNGreeA;
   private genHierarchies: Array<any> = [workclassGH, sexGH, faceGH,
@@ -38,9 +37,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private adults: Array<Adult> = [];
   public isInteractive: boolean = false;
 
-  public progressValue: number = 0;
+  private progressValue: number = 0;
   @ViewChild(InteractiveComponent)
   public interactive: InteractiveComponent;
+  @ViewChild(VectorComponent)
+  public vectorComponent: VectorComponent;
   @ViewChild('configModal')
   public configModal: ModalDirective;
 
@@ -57,13 +58,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private readFromCSVcallback: ReaderCallback = (l: Array<string>, a: Array<Adult>): void => {
     this.adults = a;
     this.csvLines = l;
-    this.configureSangreea();
   }
 
-  private configureSangreea(): void {
+  private configureSangreea(vector:any): void {
     var config: ISaNGreeAConfig = $A.config.adults;
     config.NR_DRAWS = this.adults.length;
     config.K_FACTOR = 2;
+    config['GEN_WEIGHT_VECTORS']['equal'] = vector;
 
     this.sangreea = new $A.algorithms.Sangreea("testus", config);
     for (let genHierarchy of this.genHierarchies) {
@@ -85,13 +86,17 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   public startLearning(): void {
+    var v:any = this.vectorComponent.createVector();
+    console.log(v);
+    this.configureSangreea(v);
+
     this.configModal.hide();
 
     this.userQueryCounter = 0;
     this.progressValue = 0;
     this.isInteractive = true;
 
-    this.interactive.configure(this.sangreea, this.adults);
+    this.interactive.configure(this.sangreea, this.adults, this.progressValue);
   }
 
   onInteractiveOk() {
@@ -110,7 +115,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       }
     }
 
-    this.interactive.configure(this.sangreea, this.adults);
+    this.interactive.configure(this.sangreea, this.adults, this.progressValue);
   }
 
 }

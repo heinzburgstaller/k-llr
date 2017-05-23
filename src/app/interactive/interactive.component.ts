@@ -12,6 +12,8 @@ export class InteractiveComponent implements OnInit {
 
   private sangreea: SaNGreeA;
   private adults: Array<Adult> = [];
+  private progressValue: number = 0;
+  private autoNext: boolean = false;
 
   public option1Rows: Array<AdultGen> = [];
   public option2Rows: Array<AdultGen> = [];
@@ -49,11 +51,12 @@ export class InteractiveComponent implements OnInit {
   ngOnInit() {
   }
 
-  public configure(s: SaNGreeA, a: Array<Adult>): void {
+  public configure(s: SaNGreeA, a: Array<Adult>, progressValue: number): void {
     this.sangreea = s;
     this.adults = a;
     this.decidedRows1 = [];
     this.decidedRows2 = [];
+    this.progressValue = progressValue;
     this.anon();
   }
 
@@ -158,6 +161,10 @@ export class InteractiveComponent implements OnInit {
 
       this.option1selected = true;
       this.updateColors(this.option1Cluster, this.decideBaseNode);
+
+      if (this.autoNext) {
+        this.ok();
+      }
     }
   }
 
@@ -172,8 +179,13 @@ export class InteractiveComponent implements OnInit {
       this.decidedRows2.push(rows[this.option2Rows.length - 1]);
       this.decidedRows1 = [];
 
+
       this.option1selected = false;
       this.updateColors(this.option2Cluster, this.decideBaseNode);
+
+      if (this.autoNext) {
+        this.ok();
+      }
     }
   }
 
