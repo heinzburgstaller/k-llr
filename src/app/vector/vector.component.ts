@@ -40,6 +40,18 @@ export class VectorComponent implements OnInit {
     this.valueChange(0);
   }
 
+  public getTargetColumn():string {
+    if (this.radioModel == 'marital') {
+      return 'marital-status';
+    }
+
+    if (this.radioModel == 'income') {
+      return 'income';
+    }
+
+    return 'education-num';
+  }
+
   valueChange(newValue) {
     var sum: number = this.valueAge + this.valueEducation + this.valueWorkTime
       + this.valueCountry + this.valueSex + this.valueRelationship + this.valueOccupation

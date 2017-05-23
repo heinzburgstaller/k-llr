@@ -46,6 +46,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   public configModal: ModalDirective;
 
   private userQueryCounter: number;
+  private targetColumn: string;
 
   constructor(private http: Http) {
     this.progressValue = 0;
@@ -60,7 +61,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.csvLines = l;
   }
 
-  private configureSangreea(vector:any): void {
+  private configureSangreea(vector: any): void {
     var config: ISaNGreeAConfig = $A.config.adults;
     config.NR_DRAWS = this.adults.length;
     config.K_FACTOR = 2;
@@ -86,8 +87,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   public startLearning(): void {
-    var v:any = this.vectorComponent.createVector();
-    console.log(v);
+    var v: any = this.vectorComponent.createVector();
+    this.targetColumn = this.vectorComponent.getTargetColumn();
     this.configureSangreea(v);
 
     this.configModal.hide();
@@ -96,7 +97,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.progressValue = 0;
     this.isInteractive = true;
 
-    this.interactive.configure(this.sangreea, this.adults, this.progressValue);
+    this.interactive.configure(this.sangreea, this.adults, this.progressValue, this.targetColumn);
   }
 
   onInteractiveOk() {
@@ -115,7 +116,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       }
     }
 
-    this.interactive.configure(this.sangreea, this.adults, this.progressValue);
+    this.interactive.configure(this.sangreea, this.adults, this.progressValue, this.targetColumn);
   }
 
 }
