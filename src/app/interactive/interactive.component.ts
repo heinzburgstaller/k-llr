@@ -12,6 +12,7 @@ export class InteractiveComponent implements OnInit {
 
   private sangreea: SaNGreeA;
   private adults: Array<Adult> = [];
+  private progressValue: number = 0;
 
   public option1Rows: Array<AdultGen> = [];
   public option2Rows: Array<AdultGen> = [];
@@ -49,11 +50,12 @@ export class InteractiveComponent implements OnInit {
   ngOnInit() {
   }
 
-  public configure(s: SaNGreeA, a: Array<Adult>): void {
+  public configure(s: SaNGreeA, a: Array<Adult>, progressValue: number): void {
     this.sangreea = s;
     this.adults = a;
     this.decidedRows1 = [];
     this.decidedRows2 = [];
+    this.progressValue = progressValue;
     this.anon();
   }
 

@@ -24,14 +24,6 @@
   </div>
 
   <div [hidden]="!isInteractive" class="row margin-top-05">
-    <div class="col-md-12">
-      <progressbar class="progress-striped active" [value]="progressValue" type="success"
-        max="100">
-      </progressbar>
-    </div>
-  </div>
-
-  <div [hidden]="!isInteractive" class="row margin-top-05">
     <div class="col-xs-12">
       <app-interactive (onOk)="onInteractiveOk($event)"></app-interactive>
     </div>

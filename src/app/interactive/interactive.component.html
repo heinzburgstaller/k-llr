@@ -5,6 +5,22 @@
 -->
 
 <div class="row">
+  <div class="col-xs-8">
+    <progressbar class="progress-striped active" [value]="progressValue" type="success"
+      max="100">
+    </progressbar>
+  </div>
+  <div class="col-xs-2">
+    <button type="button" class="btn btn-primary pull-right" (click)="ok()">
+      Next
+      <span class="pull-right">
+          <span class="glyphicon glyphicon-arrow-right" style="padding-left: 4px;"></span>
+        </span>
+      </button>
+  </div>
+</div>
+
+<div class="row">
   <div class="col-xs-10">
     <div>
       <h4>Option 1</h4>
@@ -146,11 +162,5 @@
         </tbody>
       </table>
     </div>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-xs-10">
-    <button type="button" class="btn btn-primary pull-right" (click)="ok()">OK</button>
   </div>
 </div>

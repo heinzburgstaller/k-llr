@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private adults: Array<Adult> = [];
   public isInteractive: boolean = false;
 
-  public progressValue: number = 0;
+  private progressValue: number = 0;
   @ViewChild(InteractiveComponent)
   public interactive: InteractiveComponent;
   @ViewChild('configModal')
@@ -91,7 +91,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.progressValue = 0;
     this.isInteractive = true;
 
-    this.interactive.configure(this.sangreea, this.adults);
+    this.interactive.configure(this.sangreea, this.adults, this.progressValue);
   }
 
   onInteractiveOk() {
@@ -110,7 +110,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       }
     }
 
-    this.interactive.configure(this.sangreea, this.adults);
+    this.interactive.configure(this.sangreea, this.adults, this.progressValue);
   }
 
 }
