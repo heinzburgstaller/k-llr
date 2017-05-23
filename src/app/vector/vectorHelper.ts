@@ -13,7 +13,8 @@ export class VectorHelper {
     });
 
     var progressReduceMargin = (1.0 - progress) * VectorHelper.COMMON_REDUCE_MARGIN;
-    var addToOthers = reduceSum / (VectorHelper.FEATURES - reducers.size);
+    var addToOthers = (reduceSum * progressReduceMargin)
+      / (VectorHelper.FEATURES - reducers.size);
 
     var increase: (feature, ref: any) => void = function(feature, ref: any) {
       if (reducers.has(feature)) {
@@ -21,11 +22,21 @@ export class VectorHelper {
       }
       ref[feature] += addToOthers;
     };
+
+    var decrease: (feature, ref: any) => void = function(feature, ref: any) {
+      if (!reducers.has(feature)) {
+        return;
+      }
+      ref[feature] -= reducers.get(feature) * progressReduceMargin;
+    };
+
     Object.keys(v['categorical']).forEach((feature) => {
       increase(feature, v['categorical']);
+      decrease(feature, v['categorical']);
     });
     Object.keys(v['range']).forEach((feature) => {
       increase(feature, v['range']);
+      decrease(feature, v['range']);
     });
   }
 
