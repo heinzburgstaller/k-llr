@@ -31,8 +31,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   private adultReader: AdultReader = new AdultReader();
   private sangreea: SaNGreeA;
+  /*private genHierarchies: Array<any> = [workclassGH, sexGH, faceGH,
+    maritalStatusGH, nativeCountryGH, relationshipGH, occupationGH, incomeGH];*/
   private genHierarchies: Array<any> = [workclassGH, sexGH, faceGH,
-    maritalStatusGH, nativeCountryGH, relationshipGH, occupationGH, incomeGH];
+    nativeCountryGH, relationshipGH, occupationGH, incomeGH];
   private csvLines: Array<string>
   private adults: Array<Adult> = [];
   public isInteractive: boolean = false;
@@ -60,11 +62,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.csvLines = l;
   }
 
-  private configureSangreea(vector:any): void {
+  private configureSangreea(vector: any): void {
     var config: ISaNGreeAConfig = $A.config.adults;
     config.NR_DRAWS = this.adults.length;
     config.K_FACTOR = 2;
     config['GEN_WEIGHT_VECTORS']['equal'] = vector;
+    config.REMOTE_TARGET = "marital";
 
     this.sangreea = new $A.algorithms.Sangreea("testus", config);
     for (let genHierarchy of this.genHierarchies) {
@@ -86,7 +89,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   public startLearning(): void {
-    var v:any = this.vectorComponent.createVector();
+    var v: any = this.vectorComponent.createVector();
     console.log(v);
     this.configureSangreea(v);
 
