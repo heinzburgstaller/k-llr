@@ -36,6 +36,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private csvLines: Array<string>
   private adults: Array<Adult> = [];
   public isInteractive: boolean = false;
+  public showResult:boolean = false;
 
   private progressValue: number = 0;
   @ViewChild(InteractiveComponent)
@@ -87,6 +88,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   public startLearning(): void {
+    this.progressValue = this.progressValue +
+      (100 / (HomeComponent.USER_QUERIES_PER_K * (HomeComponent.STOP_AT_K - 2)));
+
     var v: any = this.vectorComponent.createVector();
     this.targetColumn = this.vectorComponent.getTargetColumn();
     this.configureSangreea(v);
@@ -94,7 +98,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.configModal.hide();
 
     this.userQueryCounter = 0;
-    this.progressValue = 0;
     this.isInteractive = true;
 
     this.interactive.configure(this.sangreea, this.adults, this.progressValue, this.targetColumn);
@@ -112,6 +115,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.sangreea.updateCurrentClusters();
       if (this.sangreea.getConfig().K_FACTOR == HomeComponent.STOP_AT_K) {
         this.isInteractive = false;
+        this.showResult = true;
         return;
       }
     }
