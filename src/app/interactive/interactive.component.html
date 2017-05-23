@@ -11,6 +11,13 @@
     </progressbar>
   </div>
   <div class="col-xs-2">
+
+    <div class="checkbox" style="display: inline-block;">
+      <label title="Automatically continue on drop">
+        <input type="checkbox" [(ngModel)]="autoNext">
+        Auto next
+      </label>
+    </div>
     <button type="button" class="btn btn-primary pull-right" (click)="ok()">
       Next
       <span class="pull-right">
