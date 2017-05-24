@@ -24,6 +24,7 @@ import { GaugeModule } from 'ng2-kw-gauge';
 import { DndModule } from 'ng2-dnd';
 import { VectorComponent } from './vector/vector.component';
 import { ResultComponent } from './result/result.component';
+import { ResultItem } from './result/resultItem.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -41,7 +42,8 @@ const routes: Routes = [
     InteractiveComponent,
     ChooseAnonComponent,
     VectorComponent,
-    ResultComponent
+    ResultComponent,
+    ResultItem
   ],
   imports: [
     BrowserModule,
