@@ -27,7 +27,11 @@ export class VectorHelper {
       if (!reducers.has(feature)) {
         return;
       }
-      ref[feature] -= reducers.get(feature) * progressReduceMargin;
+      console.log(progressReduceMargin);
+      console.log(reducers.get(feature));
+      console.log(ref[feature]);
+      ref[feature] = ref[feature] - (ref[feature] * reducers.get(feature) * progressReduceMargin);
+      console.log(ref[feature]);
     };
 
     Object.keys(v['categorical']).forEach((feature) => {
