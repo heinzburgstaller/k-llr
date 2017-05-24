@@ -14,6 +14,7 @@ export class InteractiveComponent implements OnInit {
   private adults: Array<Adult> = [];
   private progressValue: number = 0;
   private autoNext: boolean = false;
+  private targetColumn: string;
 
   public option1Rows: Array<AdultGen> = [];
   public option2Rows: Array<AdultGen> = [];
@@ -41,7 +42,6 @@ export class InteractiveComponent implements OnInit {
   private colorRace: any;
   private colorMartial: any;
   private colorWorkclass: any;
-  private targetColumn: String;
 
   private colorList: Array<String> = ["bg-success", "bg-warning", "bg-warning", "bg-danger"];
 
@@ -53,12 +53,13 @@ export class InteractiveComponent implements OnInit {
   ngOnInit() {
   }
 
-  public configure(s: SaNGreeA, a: Array<Adult>, progressValue: number): void {
+  public configure(s: SaNGreeA, a: Array<Adult>, progressValue: number, targetColumn: string): void {
     this.sangreea = s;
     this.adults = a;
     this.decidedRows1 = [];
     this.decidedRows2 = [];
     this.progressValue = progressValue;
+    this.targetColumn = targetColumn;
     this.anon();
   }
 
@@ -98,7 +99,7 @@ export class InteractiveComponent implements OnInit {
       ag.race = cluster.gen_feat['race'];
       ag.sex = cluster.gen_feat['sex'];
       ag.workclass = cluster.gen_feat['workclass'];
-      console.log("WORKING: "+ag.workclass);
+      console.log("WORKING: " + ag.workclass);
       ag.relationship = cluster.gen_feat['relationship'];
       console.log(cluster.gen_ranges);
       if (cluster.gen_ranges.age[0] == cluster.gen_ranges.age[1]) {
@@ -245,7 +246,7 @@ export class InteractiveComponent implements OnInit {
       return [3, relative_costs];
     }
 
-    return [3,relative_costs];
+    return [3, relative_costs];
   }
 
   private compareHierachy(Cl: any, decideBaseNode: Array<Adult>, feature: any): Array<number> {
@@ -263,7 +264,7 @@ export class InteractiveComponent implements OnInit {
     if (Cl_level == null || Y_level == null)
       return [0, 0];
 
-    console.log(feature +" "+Y_level + " "+Cl_level);
+    console.log(feature + " " + Y_level + " " + Cl_level);
     console.log(decideBaseNode);
 
     while (Cl_feat !== Y_feat) {
