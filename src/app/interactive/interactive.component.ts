@@ -60,6 +60,7 @@ export class InteractiveComponent implements OnInit {
     this.decidedRows2 = [];
     this.progressValue = progressValue;
     this.targetColumn = targetColumn;
+    console.log(targetColumn);
     this.anon();
   }
 
@@ -91,9 +92,9 @@ export class InteractiveComponent implements OnInit {
     for (let key in cluster.nodes) {
       let ag: AdultGen = new AdultGen();
       ag.adult = this.adults[cluster.nodes[key]['_id']];
-      ag.income = cluster.gen_feat.income;
+      ag.income = cluster.gen_feat['income'];
       ag.marital_status = cluster.gen_feat['marital-status'];
-      ag.education_num = cluster.gen_feat['education-num']
+      ag.education_num = cluster.gen_feat['education-num'];
       ag.native_country = cluster.gen_feat['native-country'];
       ag.occupation = cluster.gen_feat['occupation'];
       ag.race = cluster.gen_feat['race'];
@@ -112,6 +113,14 @@ export class InteractiveComponent implements OnInit {
       } else {
         ag.hours_per_week = cluster.gen_ranges['hours-per-week'][0]
           + ' - ' + cluster.gen_ranges['hours-per-week'][1];
+      }
+      if (this.targetColumn != 'education-num') {
+        if (cluster.gen_ranges['education-num'][0] == cluster.gen_ranges['education-num'][1]) {
+          ag.education_num = cluster.gen_ranges['education-num'][0];
+        } else {
+          ag.education_num = cluster.gen_ranges['education-num'][0]
+            + ' - ' + cluster.gen_ranges['education-num'][1];
+        }
       }
       adultGens.push(ag);
     }
@@ -196,27 +205,37 @@ export class InteractiveComponent implements OnInit {
 
   private updateColors(Cl: any, decideBaseNode: Array<Adult>): void {
 
+    console.log("TRAGET: "+this.targetColumn);
     var age_cost = this.compareRange(Cl.gen_ranges.age, decideBaseNode[0]['age']);
     this.colorAge = this.colorList[age_cost[0]];
-    var education_cost = this.compareRange(Cl.gen_ranges.education, decideBaseNode[0]['education']);
-    this.colorEducation = this.colorList[education_cost[0]];
+    if (this.targetColumn != 'education-num') {
+      var education_cost = this.compareRange(Cl.gen_ranges.education, decideBaseNode[0]['education']);
+      this.colorEducation = this.colorList[education_cost[0]];
+    }
+
     var hours_cost = this.compareRange(Cl.gen_ranges['hours-per-week'], decideBaseNode[0]['hours_per_week']);
     this.colorHours = this.colorList[hours_cost[0]];
 
-    var country_cost = this.compareHierachy(Cl, decideBaseNode, 'native-country')
+    var country_cost = this.compareHierachy(Cl, decideBaseNode, 'native-country');
     this.colorCountry = this.colorList[country_cost[0]];
     var sex_cost = this.compareHierachy(Cl, decideBaseNode, 'sex')
     this.colorSex = this.colorList[sex_cost[0]];
-    var relation_cost = this.compareHierachy(Cl, decideBaseNode, 'relationship')
+    var relation_cost = this.compareHierachy(Cl, decideBaseNode, 'relationship');
     this.colorRelation = this.colorList[relation_cost[0]];
-    var occupation_cost = this.compareHierachy(Cl, decideBaseNode, 'occupation')
+    var occupation_cost = this.compareHierachy(Cl, decideBaseNode, 'occupation');
     this.colorOccupation = this.colorList[occupation_cost[0]];
-    var income_cost = this.compareHierachy(Cl, decideBaseNode, 'income')
-    this.colorIncome = this.colorList[income_cost[0]];
-    var race_cost = this.compareHierachy(Cl, decideBaseNode, 'race')
+    if (this.targetColumn != 'income') {
+      var income_cost = this.compareHierachy(Cl, decideBaseNode, 'income');
+      this.colorIncome = this.colorList[income_cost[0]];
+    }
+
+    var race_cost = this.compareHierachy(Cl, decideBaseNode, 'race');
     this.colorRace = this.colorList[race_cost[0]];
-    var martial_cost = this.compareHierachy(Cl, decideBaseNode, 'marital-status')
-    this.colorMartial = this.colorList[martial_cost[0]];
+    if (this.targetColumn != 'marital-status') {
+      var martial_cost = this.compareHierachy(Cl, decideBaseNode, 'marital-status');
+      this.colorMartial = this.colorList[martial_cost[0]];
+    }
+
     var workclass_cost = this.compareHierachy(Cl, decideBaseNode, 'workclass')
     this.colorWorkclass = this.colorList[workclass_cost[0]];
     console.log(workclass_cost[0]);

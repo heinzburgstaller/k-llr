@@ -86,6 +86,7 @@ export class VectorComponent implements OnInit {
     var v: any = {}
     v['categorical'] = {};
     if (this.radioModel != 'income') {
+      console.log("CREATE INCOME");
       v['categorical']['income'] = this.adjustedIncome;
     }
     v['categorical']['native-country'] = this.adjustedCountry;
@@ -95,6 +96,7 @@ export class VectorComponent implements OnInit {
     v['categorical']['race'] = this.adjustedRace;
     v['categorical']['occupation'] = this.adjustedOccupation;
     if (this.radioModel != 'marital') {
+      console.log("CREATE MARITAL");
       v['categorical']['marital-status'] = this.adjustedMarital;
     }
 
@@ -102,6 +104,7 @@ export class VectorComponent implements OnInit {
     v['range']['age'] = this.adjustedAge;
     v['range']['hours-per-week'] = this.adjustedWorkTime;
     if (this.radioModel != 'edu') {
+      console.log("CREATE EDUCATION");
       v['range']['education-num'] = this.adjustedEducation;
     }
 

@@ -31,10 +31,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   private adultReader: AdultReader = new AdultReader();
   private sangreea: SaNGreeA;
-  /*private genHierarchies: Array<any> = [workclassGH, sexGH, faceGH,
-    maritalStatusGH, nativeCountryGH, relationshipGH, occupationGH, incomeGH];*/
   private genHierarchies: Array<any> = [workclassGH, sexGH, faceGH,
-    nativeCountryGH, relationshipGH, occupationGH, incomeGH];
+    maritalStatusGH, nativeCountryGH, relationshipGH, occupationGH, incomeGH];
+  /*private genHierarchies: Array<any> = [workclassGH, sexGH, faceGH,
+    nativeCountryGH, relationshipGH, occupationGH, incomeGH];*/
   private csvLines: Array<string>
   private adults: Array<Adult> = [];
   public isInteractive: boolean = false;
@@ -69,7 +69,26 @@ export class HomeComponent implements OnInit, AfterViewInit {
     config.NR_DRAWS = this.adults.length;
     config.K_FACTOR = 2;
     config['GEN_WEIGHT_VECTORS']['equal'] = vector;
-    config.REMOTE_TARGET = "marital";
+    if (this.vectorComponent.radioModel == 'edu'){
+      this.targetColumn = 'education-num';
+      config.TARGET_COLUMN = "education-num";
+      config.REMOTE_TARGET = "education-num";
+      console.log("Target: Education");
+    }
+    if (this.vectorComponent.radioModel == 'marital'){
+      this.targetColumn = 'marital-status';
+      config.TARGET_COLUMN = "marital-status";
+      config.REMOTE_TARGET = "marital-status";
+      console.log("Target: Marital");
+    }
+    if (this.vectorComponent.radioModel == 'income'){
+      this.targetColumn = 'income';
+      config.TARGET_COLUMN = "income";
+      config.REMOTE_TARGET = "income";
+      console.log("Target: Income");
+    }
+    console.log("Created Configure Sangreea:");
+    console.log(config['GEN_WEIGHT_VECTORS']['equal']);
 
     this.sangreea = new $A.algorithms.Sangreea("testus", config);
     for (let genHierarchy of this.genHierarchies) {
@@ -93,6 +112,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   public startLearning(): void {
 
     var v: any = this.vectorComponent.createVector();
+    console.log("CREATED VECTOR:");
     console.log(v);
 
     this.configureSangreea(v);
