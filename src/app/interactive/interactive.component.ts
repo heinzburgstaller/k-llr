@@ -93,6 +93,7 @@ export class InteractiveComponent implements OnInit {
       ag.adult = this.adults[cluster.nodes[key]['_id']];
       ag.income = cluster.gen_feat.income;
       ag.marital_status = cluster.gen_feat['marital-status'];
+      ag.education_num = cluster.gen_feat['education-num']
       ag.native_country = cluster.gen_feat['native-country'];
       ag.occupation = cluster.gen_feat['occupation'];
       ag.race = cluster.gen_feat['race'];
@@ -250,11 +251,13 @@ export class InteractiveComponent implements OnInit {
 
   private compareHierachy(Cl: any, decideBaseNode: Array<Adult>, feature: any): Array<number> {
 
+    console.log(feature);
     var cat_gh = this.sangreea.getCatHierarchy(feature);
     var Cl_feat = Cl.gen_feat[feature];
     var Y_feat = decideBaseNode[0][feature];
     if (feature == "marital-status" && Y_feat == null)
       Y_feat = decideBaseNode[0]['marital_status'];
+    console.log(Cl.gen_feat);
     var Cl_level = cat_gh.getLevelEntry(Cl_feat);
     var Y_level = cat_gh.getLevelEntry(Y_feat);
     var old_level = Cl_level;
