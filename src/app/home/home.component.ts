@@ -10,7 +10,7 @@ import { ReaderCallback, AdultReader } from '../adultReader';
 
 import * as workclassGH from '../../genHierarchies/workclassGH.json';
 import * as sexGH from '../../genHierarchies/sexGH.json';
-import * as faceGH from '../../genHierarchies/raceGH.json';
+import * as raceGH from '../../genHierarchies/raceGH.json';
 import * as maritalStatusGH from '../../genHierarchies/marital-statusGH.json';
 import * as nativeCountryGH from '../../genHierarchies/native-countryGH.json';
 import * as relationshipGH from '../../genHierarchies/relationshipGH.json';
@@ -31,10 +31,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   private adultReader: AdultReader = new AdultReader();
   private sangreea: SaNGreeA;
-  private genHierarchies: Array<any> = [workclassGH, sexGH, faceGH,
-    maritalStatusGH, nativeCountryGH, relationshipGH, occupationGH, incomeGH];
-  /*private genHierarchies: Array<any> = [workclassGH, sexGH, faceGH,
-    nativeCountryGH, relationshipGH, occupationGH, incomeGH];*/
   private csvLines: Array<string>
   private adults: Array<Adult> = [];
   public isInteractive: boolean = false;
@@ -64,6 +60,21 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.csvLines = l;
   }
 
+  private getGenHierarchies(): Array<any> {
+    if (this.targetColumn == 'income') {
+      return [workclassGH, sexGH, raceGH,
+        maritalStatusGH, nativeCountryGH, relationshipGH, occupationGH];
+    }
+
+    if (this.targetColumn == 'marital-status') {
+      return [workclassGH, sexGH, raceGH,
+        nativeCountryGH, relationshipGH, occupationGH, incomeGH];
+    }
+
+    return [workclassGH, sexGH, raceGH,
+      maritalStatusGH, nativeCountryGH, relationshipGH, occupationGH, incomeGH];
+  }
+
   private configureSangreea(vector: any): void {
     var config: ISaNGreeAConfig = $A.config.adults;
     config.NR_DRAWS = this.adults.length;
@@ -77,7 +88,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     console.log(config['GEN_WEIGHT_VECTORS']['equal']);
 
     this.sangreea = new $A.algorithms.Sangreea("testus", config);
-    for (let genHierarchy of this.genHierarchies) {
+    for (let genHierarchy of this.getGenHierarchies()) {
       let jsonx: string = JSON.stringify(genHierarchy);
       let strgh = new $A.genHierarchy.Category(jsonx);
       this.sangreea.setCatHierarchy(strgh._name, strgh);
