@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private csvLines: Array<string>
   private adults: Array<Adult> = [];
   public isInteractive: boolean = false;
-  public showResult:boolean = false;
+  public showResult: boolean = false;
 
   private progressValue: number = 0;
   @ViewChild(InteractiveComponent)
@@ -69,24 +69,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
     config.NR_DRAWS = this.adults.length;
     config.K_FACTOR = 2;
     config['GEN_WEIGHT_VECTORS']['equal'] = vector;
-    if (this.vectorComponent.radioModel == 'edu'){
-      this.targetColumn = 'education-num';
-      config.TARGET_COLUMN = "education-num";
-      config.REMOTE_TARGET = "education-num";
-      console.log("Target: Education");
-    }
-    if (this.vectorComponent.radioModel == 'marital'){
-      this.targetColumn = 'marital-status';
-      config.TARGET_COLUMN = "marital-status";
-      config.REMOTE_TARGET = "marital-status";
-      console.log("Target: Marital");
-    }
-    if (this.vectorComponent.radioModel == 'income'){
-      this.targetColumn = 'income';
-      config.TARGET_COLUMN = "income";
-      config.REMOTE_TARGET = "income";
-      console.log("Target: Income");
-    }
+    this.targetColumn = this.vectorComponent.getTargetColumn();
+    config.TARGET_COLUMN = this.targetColumn;
+    //config.REMOTE_TARGET = this.targetColumn;
+    console.log("Target column: " + this.targetColumn);
     console.log("Created Configure Sangreea:");
     console.log(config['GEN_WEIGHT_VECTORS']['equal']);
 
