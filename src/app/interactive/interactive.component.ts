@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Adult, AdultGen } from '../adult';
-import { SaNGreeA } from 'anonymiationjs';
+import { SaNGreeA } from 'anonymizationjs';
 import { ProgressGraphSettings } from './progressGraphSettings';
 
 @Component({

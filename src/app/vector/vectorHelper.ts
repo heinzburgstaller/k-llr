@@ -1,4 +1,4 @@
-import { SaNGreeA } from 'anonymiationjs';
+import { SaNGreeA } from 'anonymizationjs';
 
 export class VectorHelper {
 

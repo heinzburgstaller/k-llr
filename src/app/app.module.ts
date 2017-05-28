@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 
-import { AlertModule } from 'ng2-bootstrap';
-import { ProgressbarModule } from 'ng2-bootstrap/progressbar';
-import { ModalModule } from 'ng2-bootstrap/modal';
-import { ButtonsModule } from 'ng2-bootstrap/buttons';
+import { AlertModule } from 'ngx-bootstrap';
+import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
 import { DataTableModule } from "angular2-datatable";
 
@@ -19,7 +19,7 @@ import { ChooseAnonComponent } from './choose-anon/choose-anon.component';
 
 import { DragulaModule } from 'ng2-dragula';
 
-import { GaugeModule } from 'ng2-kw-gauge';
+import { GaugeModule } from 'ng-gauge';
 
 import { DndModule } from 'ng2-dnd';
 import { VectorComponent } from './vector/vector.component';

@@ -1,4 +1,4 @@
-import { GaugeSegment, GaugeLabel } from 'ng2-kw-gauge';
+import { GaugeSegment, GaugeLabel } from 'ng-gauge';
 
 export class ProgressGraphSettings {
 
