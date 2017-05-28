@@ -25,6 +25,7 @@ import { DndModule } from 'ng2-dnd';
 import { VectorComponent } from './vector/vector.component';
 import { ResultComponent } from './result/result.component';
 import { ResultItem } from './result/resultItem.component';
+import { ResultService } from './result/result.service';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -59,7 +60,7 @@ const routes: Routes = [
     GaugeModule,
     DndModule.forRoot()
   ],
-  providers: [],
+  providers: [ResultService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
