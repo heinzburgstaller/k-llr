@@ -21,6 +21,7 @@ import * as occupationGH from '../../genHierarchies/occupationGH.json';
 import * as incomeGH from '../../genHierarchies/incomeGH.json';
 
 import * as $A from 'anonymizationjs';
+import * as $A2 from 'anonymizationjs';
 
 @Component({
   selector: 'app-home',
@@ -89,27 +90,30 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.targetColumn = this.vectorComponent.getTargetColumn();
     config.TARGET_COLUMN = this.targetColumn;
     //config.REMOTE_TARGET = this.targetColumn;
-    console.log("Target column: " + this.targetColumn);
-    console.log("Created Configure Sangreea:");
-    console.log(config['GEN_WEIGHT_VECTORS']['equal']);
+    //console.log("Target column: " + this.targetColumn);
+    //console.log("Created Configure Sangreea:");
+    //console.log(config['GEN_WEIGHT_VECTORS']['equal']);
+
+    var config2: ISaNGreeAConfig = $A2.config.adults;
+    config2.NR_DRAWS = this.adults.length;
+    config2.K_FACTOR = 7;
+    config2['GEN_WEIGHT_VECTORS']['equal'] = vector;
+    this.targetColumn = this.vectorComponent.getTargetColumn();
+    config2.TARGET_COLUMN = this.targetColumn;
 
     this.sangreea = new $A.algorithms.Sangreea("testus", config);
-    this.sangreeaNonIml = new $A.algorithms.Sangreea("testus2", JSON.parse(JSON.stringify(config)));
+    this.sangreeaNonIml = new $A2.algorithms.Sangreea("testus2", config2);
     for (let genHierarchy of this.getGenHierarchies()) {
-      let jsonx: string = JSON.stringify(genHierarchy);
-      let strgh = new $A.genHierarchy.Category(jsonx);
-      let strgh2 = new $A.genHierarchy.Category(jsonx);
+      let strgh = new $A.genHierarchy.Category(JSON.stringify(genHierarchy));
+      let strgh2 = new $A2.genHierarchy.Category(JSON.stringify(genHierarchy));
       this.sangreea.setCatHierarchy(strgh._name, strgh);
       this.sangreeaNonIml.setCatHierarchy(strgh2._name, strgh2);
     }
 
-    /*
-    this.sangreeaNonIml.getConfig().K_FACTOR = HomeComponent.STOP_AT_K;
-    this.sangreeaNonIml.instantiateGraph(this.csvLines, false);
+    this.sangreeaNonIml.instantiateGraph(this.csvLines.slice(), false);
     this.sangreeaNonIml.anonymizeGraph();
-    */
 
-    this.sangreea.instantiateGraph(this.csvLines, false);
+    this.sangreea.instantiateGraph(this.csvLines.slice(), false);
     this.sangreea.getConfig().K_FACTOR = 2;
     this.sangreea.anonymizeGraph(72);
   }
@@ -132,13 +136,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.userQueryCounter = 0;
     this.isInteractive = true;
 
+    this.increaseProgressValue();
     this.interactive.configure(this.sangreea, this.adults, this.progressValue, this.targetColumn);
   }
 
   onInteractiveOk() {
     this.userQueryCounter++;
-    this.progressValue = this.progressValue +
-      (100 / (HomeComponent.USER_QUERIES_PER_K * (HomeComponent.STOP_AT_K - 2)));
+    this.increaseProgressValue();
 
     if (this.userQueryCounter == HomeComponent.USER_QUERIES_PER_K) {
       this.sangreea.getConfig().K_FACTOR++;
@@ -156,23 +160,20 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.interactive.configure(this.sangreea, this.adults, this.progressValue, this.targetColumn);
   }
 
-  sendToServer() {
-    //debugger;
-    //this.sangreeaNonIml.getConfig().K_FACTOR = HomeComponent.STOP_AT_K;
-    //this.sangreeaNonIml.instantiateGraph(this.csvLines, false);
-    //this.sangreeaNonIml.anonymizeGraph();
+  private increaseProgressValue() {
+    this.progressValue = this.progressValue +
+      (100 / (HomeComponent.USER_QUERIES_PER_K * (HomeComponent.STOP_AT_K - 2)));
+  }
 
+  sendToServer() {
     var biasIml: any = VectorHelper.getVectorAsJson(this.sangreea);
     var csvIml: string = this.sangreea.constructAnonymizedCSV();
-    var bias: any = VectorHelper.getVectorAsJson(this.sangreea);
-    var csv: string = this.sangreea.constructAnonymizedCSV();
 
-    //var bias: any = VectorHelper.getVectorAsJson(this.sangreeaNonIml);
-    //var csv: string = this.sangreeaNonIml.constructAnonymizedCSV();
+    var bias: any = VectorHelper.getVectorAsJson(this.sangreeaNonIml);
+    var csv: string = this.sangreeaNonIml.constructAnonymizedCSV();
 
-
-    this.resultService.postToServer('HeinzUndStefan', bias, biasIml,
-      csv, csvIml, this.targetColumn).subscribe(
+    this.resultService.postToServer(this.vectorComponent.username == '' ? 'Anonym' : this.vectorComponent.username,
+      bias, biasIml, csv, csvIml, this.targetColumn).subscribe(
       data => {
         this.resultComponent.isLoading = false;
         this.resultComponent.setResponse(data);

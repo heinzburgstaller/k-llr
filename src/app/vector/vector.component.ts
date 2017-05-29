@@ -9,6 +9,7 @@ import { VectorHelper } from './vectorHelper';
 export class VectorComponent implements OnInit {
 
   public radioModel: string = 'edu';
+  public username:string = 'Franzi';
 
   public valueAge: number = 50;
   public valueEducation: number = 50;
