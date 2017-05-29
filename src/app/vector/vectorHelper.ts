@@ -5,6 +5,21 @@ export class VectorHelper {
   public static readonly FEATURES:number = 10;
   public static readonly COMMON_REDUCE_MARGIN:number = 0.2;
 
+  public static getVectorAsJson(sangreea: SaNGreeA): any {
+    var vaj: any = {};
+    var v = sangreea.getConfig()['GEN_WEIGHT_VECTORS']['equal'];
+
+    Object.keys(v['categorical']).forEach((feature) => {
+      vaj[feature] = v['categorical'][feature];
+    });
+
+    Object.keys(v['range']).forEach((feature) => {
+      vaj[feature] = v['range'][feature];
+    });
+
+    return vaj;
+  }
+
   public static reduce(sangreea: SaNGreeA, reducers: Map<string, number>, progress: number): void {
     var v = sangreea.getConfig()['GEN_WEIGHT_VECTORS']['equal'];
     var reduceSum = 0;

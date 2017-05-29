@@ -1,5 +1,52 @@
-<div class="row">
-  <div class="col-md-3 col-sm-6 col-xs-12" *ngFor="let r of resultValues">
-    <result-item [item]="r"></result-item>
+<div *ngIf="isLoading" class="row">
+  <div class="alert alert-info" role="alert">
+    <strong>Please wait!</strong> The result is calculated on a slow server.
+     This could take up to two minutes...
+  </div>
+  <div class="col-xs-12">
+    <img class="center-block" src="../../assets/image/spinner.gif">
+  </div>
+</div>
+
+<div *ngIf="!isLoading" class="row">
+  <div class="col-xs-12">
+    <div class="thumbnail">
+      <img class="center-block" src="{{r.plotURL}}" alt="">
+      <div class="caption">
+        <h4>Result for {{r.grouptoken}}/{{r.usertoken}}</h4>
+        <p><strong>Target column:</strong> {{r.target}}</p>
+        <p><strong>Timestamp:</strong> {{r.timestamp}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!isLoading" class="row">
+  <h2>Bias</h2>
+  <div *ngFor="let v of keysGetter(r.results.bias)" class="col-xs-12 col-sm-6 col-md-3">
+    <div class="thumbnail">
+      <div class="caption">
+        <h4>{{v}}</h4>
+        <p><strong>Recall:</strong> {{r.results.bias[v].recall | number:'1.3-3'}}</p>
+        <p><strong>Accuracy:</strong> {{r.results.bias[v].accuracy | number:'1.3-3'}}</p>
+        <p><strong>Precision:</strong> {{r.results.bias[v].precision | number:'1.3-3'}}</p>
+        <p><strong>F1:</strong> {{r.results.bias[v].f1 | number:'1.3-3'}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!isLoading" class="row">
+  <h2>iML</h2>
+  <div *ngFor="let v of keysGetter(r.results.iml)" class="col-xs-12 col-sm-6 col-md-3">
+    <div class="thumbnail">
+      <div class="caption">
+        <h4>{{v}}</h4>
+        <p><strong>Recall:</strong> {{r.results.iml[v].recall | number:'1.3-3'}}</p>
+        <p><strong>Accuracy:</strong> {{r.results.iml[v].accuracy | number:'1.3-3'}}</p>
+        <p><strong>Precision:</strong> {{r.results.iml[v].precision | number:'1.3-3'}}</p>
+        <p><strong>F1:</strong> {{r.results.iml[v].f1 | number:'1.3-3'}}</p>
+      </div>
+    </div>
   </div>
 </div>

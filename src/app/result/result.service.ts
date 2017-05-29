@@ -5,6 +5,8 @@ import 'rxjs/Rx';
 @Injectable()
 export class ResultService {
 
+  public static readonly GROUP_TOKEN:string = 'cafedood';
+
   private csv_result: string = `age, education-num, hours-per-week, workclass, native-country, sex, race, marital-status, relationship, occupation, income
 41, 13, 42.5, *, United-States, Male, White, *, *, *, <=50K
 41, 13, 42.5, *, United-States, Male, White, *, *, *, >50K
@@ -508,8 +510,8 @@ export class ResultService {
 43.5, 7, 24.5, Private, United-States, *, *, *, *, services, <=50K
 `;
 
-  private data:string = JSON.stringify({
-    "grouptoken": "string",
+  private data: string = JSON.stringify({
+    "grouptoken": ResultService.GROUP_TOKEN,
     "usertoken": "string",
     "weights": {
       "bias": {
@@ -559,6 +561,35 @@ export class ResultService {
   });
 
   constructor(private http: Http) {
+  }
+
+  private getMessageBody(user: string, bias: any, iml: any,
+    csvBias: string, csvIml: string, target: string): string {
+    var data: string = JSON.stringify({
+      "grouptoken": ResultService.GROUP_TOKEN,
+      "usertoken": user,
+      "weights": {
+        "bias": bias,
+        "iml": iml,
+      },
+      "csv": {
+        "bias": csvBias,
+        "iml": csvIml
+      },
+      "target": target,
+    });
+
+    return data;
+  }
+
+  postToServer(user: string, bias: any, iml: any,
+    csvBias: string, csvIml: string, target: string) {
+    let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' });
+    let options = new RequestOptions({ headers: headers });
+    let body = this.getMessageBody(user, bias, iml,
+      csvBias, csvIml, target);
+    console.log('in post2');
+    return this.http.post('http://berndmalle.com:5000/anonML', body, options).map((res: Response) => res.json());
   }
 
   post2() {

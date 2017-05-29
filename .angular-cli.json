@@ -9,6 +9,7 @@
       "outDir": "dist",
       "assets": [
         "assets",
+        "assets/image",
         "original_data_500_rows.csv",
         "favicon.ico",
         "genHierarchies"

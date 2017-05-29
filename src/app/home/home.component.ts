@@ -4,9 +4,12 @@ import { Observable, Subscription } from 'rxjs/Rx';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { InteractiveComponent } from '../interactive/interactive.component';
 import { VectorComponent } from '../vector/vector.component';
+import { VectorHelper} from '../vector/vectorHelper';
 import { SaNGreeA, StringGenHierarchy, ISaNGreeAConfig } from 'anonymizationjs';
 import { Adult, AdultGen } from '../adult';
 import { ReaderCallback, AdultReader } from '../adultReader';
+import { ResultComponent } from '../result/result.component';
+import { ResultService } from '../result/result.service';
 
 import * as workclassGH from '../../genHierarchies/workclassGH.json';
 import * as sexGH from '../../genHierarchies/sexGH.json';
@@ -31,6 +34,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   private adultReader: AdultReader = new AdultReader();
   private sangreea: SaNGreeA;
+  private sangreeaNonIml: SaNGreeA;
   private csvLines: Array<string>
   private adults: Array<Adult> = [];
   public isInteractive: boolean = false;
@@ -43,11 +47,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
   public vectorComponent: VectorComponent;
   @ViewChild('configModal')
   public configModal: ModalDirective;
+  @ViewChild(ResultComponent)
+  public resultComponent: ResultComponent;
 
   private userQueryCounter: number;
   private targetColumn: string;
 
-  constructor(private http: Http) {
+  constructor(private http: Http, private resultService: ResultService) {
     this.progressValue = 0;
   }
 
@@ -88,11 +94,20 @@ export class HomeComponent implements OnInit, AfterViewInit {
     console.log(config['GEN_WEIGHT_VECTORS']['equal']);
 
     this.sangreea = new $A.algorithms.Sangreea("testus", config);
+    this.sangreeaNonIml = new $A.algorithms.Sangreea("testus2", JSON.parse(JSON.stringify(config)));
     for (let genHierarchy of this.getGenHierarchies()) {
       let jsonx: string = JSON.stringify(genHierarchy);
       let strgh = new $A.genHierarchy.Category(jsonx);
+      let strgh2 = new $A.genHierarchy.Category(jsonx);
       this.sangreea.setCatHierarchy(strgh._name, strgh);
+      this.sangreeaNonIml.setCatHierarchy(strgh2._name, strgh2);
     }
+
+    /*
+    this.sangreeaNonIml.getConfig().K_FACTOR = HomeComponent.STOP_AT_K;
+    this.sangreeaNonIml.instantiateGraph(this.csvLines, false);
+    this.sangreeaNonIml.anonymizeGraph();
+    */
 
     this.sangreea.instantiateGraph(this.csvLines, false);
     this.sangreea.getConfig().K_FACTOR = 2;
@@ -107,13 +122,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   public startLearning(): void {
-
     var v: any = this.vectorComponent.createVector();
     console.log("CREATED VECTOR:");
     console.log(v);
 
     this.configureSangreea(v);
-
     this.configModal.hide();
 
     this.userQueryCounter = 0;
@@ -135,11 +148,38 @@ export class HomeComponent implements OnInit, AfterViewInit {
       if (this.sangreea.getConfig().K_FACTOR == HomeComponent.STOP_AT_K) {
         this.isInteractive = false;
         this.showResult = true;
+        this.sendToServer();
         return;
       }
     }
 
     this.interactive.configure(this.sangreea, this.adults, this.progressValue, this.targetColumn);
+  }
+
+  sendToServer() {
+    //debugger;
+    //this.sangreeaNonIml.getConfig().K_FACTOR = HomeComponent.STOP_AT_K;
+    //this.sangreeaNonIml.instantiateGraph(this.csvLines, false);
+    //this.sangreeaNonIml.anonymizeGraph();
+
+    var biasIml: any = VectorHelper.getVectorAsJson(this.sangreea);
+    var csvIml: string = this.sangreea.constructAnonymizedCSV();
+    var bias: any = VectorHelper.getVectorAsJson(this.sangreea);
+    var csv: string = this.sangreea.constructAnonymizedCSV();
+
+    //var bias: any = VectorHelper.getVectorAsJson(this.sangreeaNonIml);
+    //var csv: string = this.sangreeaNonIml.constructAnonymizedCSV();
+
+
+    this.resultService.postToServer('HeinzUndStefan', bias, biasIml,
+      csv, csvIml, this.targetColumn).subscribe(
+      data => {
+        this.resultComponent.isLoading = false;
+        this.resultComponent.setResponse(data);
+      },
+      err => console.log(err),
+      () => console.log('Request Completed')
+      );
   }
 
 }
