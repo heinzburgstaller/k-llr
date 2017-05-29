@@ -3,24 +3,30 @@ import { SaNGreeA } from 'anonymizationjs';
 export class VectorHelper {
 
   public static readonly FEATURES:number = 10;
-  public static readonly COMMON_REDUCE_MARGIN:number = 0.2;
+  public static readonly COMMON_REDUCE_MARGIN:number = 0.3;
 
   public static reduce(sangreea: SaNGreeA, reducers: Map<string, number>, progress: number): void {
+
+    reducers.forEach((value: number, key: string) => {
+      if (value == 0) {
+        reducers.delete(key);
+      }
+    });
+
     var v = sangreea.getConfig()['GEN_WEIGHT_VECTORS']['equal'];
     var reduceSum = 0;
     reducers.forEach((value: number, key: string) => {
-      reduceSum += value;
+      reduceSum = reduceSum + value;
     });
 
     var progressReduceMargin = (1.0 - progress) * VectorHelper.COMMON_REDUCE_MARGIN;
     var addToOthers = (reduceSum * progressReduceMargin)
       / (VectorHelper.FEATURES - reducers.size);
-
     var increase: (feature, ref: any) => void = function(feature, ref: any) {
       if (reducers.has(feature)) {
         return;
       }
-      ref[feature] += addToOthers;
+      ref[feature] = ref[feature] + addToOthers;
     };
 
     var decrease: (feature, ref: any) => void = function(feature, ref: any) {

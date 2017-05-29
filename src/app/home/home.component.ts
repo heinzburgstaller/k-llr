@@ -7,6 +7,7 @@ import { VectorComponent } from '../vector/vector.component';
 import { SaNGreeA, StringGenHierarchy, ISaNGreeAConfig } from 'anonymizationjs';
 import { Adult, AdultGen } from '../adult';
 import { ReaderCallback, AdultReader } from '../adultReader';
+import {VectorHelper} from '../vector/vectorHelper';
 
 import * as workclassGH from '../../genHierarchies/workclassGH.json';
 import * as sexGH from '../../genHierarchies/sexGH.json';
@@ -126,6 +127,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.userQueryCounter++;
     this.progressValue = this.progressValue +
       (100 / (HomeComponent.USER_QUERIES_PER_K * (HomeComponent.STOP_AT_K - 2)));
+      console.log(this.sangreea.getConfig()['GEN_WEIGHT_VECTORS']['equal']['categorical']);
+      console.log(this.sangreea.getConfig()['GEN_WEIGHT_VECTORS']['equal']['range']);
 
     if (this.userQueryCounter == HomeComponent.USER_QUERIES_PER_K) {
       this.sangreea.getConfig().K_FACTOR++;

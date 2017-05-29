@@ -2,6 +2,7 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Adult, AdultGen } from '../adult';
 import { SaNGreeA } from 'anonymizationjs';
 import { ProgressGraphSettings } from './progressGraphSettings';
+import {VectorHelper} from '../vector/vectorHelper';
 
 @Component({
   selector: 'app-interactive',
@@ -43,6 +44,9 @@ export class InteractiveComponent implements OnInit {
   private colorMartial: any;
   private colorWorkclass: any;
 
+  public weightValues: Map<string, number>;
+  private clusterChoosen: boolean;
+
   private colorList: Array<String> = ["bg-success", "bg-warning", "bg-warning", "bg-danger"];
 
   @Output() onOk = new EventEmitter<any>();
@@ -60,13 +64,12 @@ export class InteractiveComponent implements OnInit {
     this.decidedRows2 = [];
     this.progressValue = progressValue;
     this.targetColumn = targetColumn;
-    console.log(targetColumn);
+
     this.anon();
   }
 
   private anon(): void {
     this.option1Cluster = this.selectRandomCluster(this.sangreea._clusters);
-    console.log(this.option1Cluster);
 
     this.option1Rows = this.getAdultGensFromCluster(this.option1Cluster);
     this.option2Cluster = this.selectRandomCluster(this.sangreea._clusters);
@@ -77,7 +80,7 @@ export class InteractiveComponent implements OnInit {
 
     this.option1Costs = this.sangreea.calculateGIL(this.option1Cluster,
       this.sangreea._graph.getNodeById(this.decideRows[0].id));
-    console.log(this.sangreea._graph.getNodeById(this.decideRows[0].id));
+
     this.option2Costs = this.sangreea.calculateGIL(this.option2Cluster,
       this.sangreea._graph.getNodeById(this.decideRows[0].id));
   }
@@ -100,9 +103,9 @@ export class InteractiveComponent implements OnInit {
       ag.race = cluster.gen_feat['race'];
       ag.sex = cluster.gen_feat['sex'];
       ag.workclass = cluster.gen_feat['workclass'];
-      console.log("WORKING: " + ag.workclass);
+
       ag.relationship = cluster.gen_feat['relationship'];
-      console.log(cluster.gen_ranges);
+
       if (cluster.gen_ranges.age[0] == cluster.gen_ranges.age[1]) {
         ag.age = cluster.gen_ranges.age[0];
       } else {
@@ -167,7 +170,7 @@ export class InteractiveComponent implements OnInit {
       var copyCluster = JSON.parse(JSON.stringify(this.option1Cluster));
 
       this.calcNewCluster(copyCluster, this.decideBaseNode);
-      console.log(copyCluster);
+
       var rows = this.getAdultGensFromCluster(copyCluster);
       this.decideRows = [];
       this.decidedRows1.push(rows[this.option1Rows.length - 1]);
@@ -203,42 +206,75 @@ export class InteractiveComponent implements OnInit {
     }
   }
 
+  /*  private createWeightMap() {
+      if (this.targetColumn == 'education-num') {
+        this.weightValues = new Map<string,number>(["age",1]);
+        /*, 'hours-per-week', 'native-country', 'sex', 'relationship', 'occupation', 'income', 'race', 'marital-status', 'workclass');
+
+        }
+      if (this.targetColumn == 'income') {
+
+      }
+      if (this.targetColumn == 'marital-status') {
+
+      }
+    }*/
+
   private updateColors(Cl: any, decideBaseNode: Array<Adult>): void {
 
-    console.log("TRAGET: "+this.targetColumn);
+    this.weightValues = new Map();
+
+
     var age_cost = this.compareRange(Cl.gen_ranges.age, decideBaseNode[0]['age']);
+    console.log("Age: ");
+    console.log(age_cost);
+    var percentCorrection = 100;
+
     this.colorAge = this.colorList[age_cost[0]];
+    this.weightValues.set('age', age_cost[0] / percentCorrection);
+
     if (this.targetColumn != 'education-num') {
       var education_cost = this.compareRange(Cl.gen_ranges.education, decideBaseNode[0]['education']);
       this.colorEducation = this.colorList[education_cost[0]];
+      this.weightValues.set('education-num', education_cost[0] / percentCorrection);
     }
 
     var hours_cost = this.compareRange(Cl.gen_ranges['hours-per-week'], decideBaseNode[0]['hours_per_week']);
     this.colorHours = this.colorList[hours_cost[0]];
+    this.weightValues.set('hours-per-week', hours_cost[0] / percentCorrection);
 
     var country_cost = this.compareHierachy(Cl, decideBaseNode, 'native-country');
     this.colorCountry = this.colorList[country_cost[0]];
+    this.weightValues.set('native-country', country_cost[0] / percentCorrection);
     var sex_cost = this.compareHierachy(Cl, decideBaseNode, 'sex')
     this.colorSex = this.colorList[sex_cost[0]];
+    this.weightValues.set('sex', sex_cost[0] / percentCorrection);
     var relation_cost = this.compareHierachy(Cl, decideBaseNode, 'relationship');
     this.colorRelation = this.colorList[relation_cost[0]];
+    this.weightValues.set('relationship', relation_cost[0] / percentCorrection);
     var occupation_cost = this.compareHierachy(Cl, decideBaseNode, 'occupation');
     this.colorOccupation = this.colorList[occupation_cost[0]];
+    this.weightValues.set('occupation', occupation_cost[0] / percentCorrection);
     if (this.targetColumn != 'income') {
       var income_cost = this.compareHierachy(Cl, decideBaseNode, 'income');
       this.colorIncome = this.colorList[income_cost[0]];
+      this.weightValues.set('income', income_cost[0] / percentCorrection);
     }
 
     var race_cost = this.compareHierachy(Cl, decideBaseNode, 'race');
     this.colorRace = this.colorList[race_cost[0]];
+    this.weightValues.set('race', race_cost[0] / percentCorrection);
     if (this.targetColumn != 'marital-status') {
       var martial_cost = this.compareHierachy(Cl, decideBaseNode, 'marital-status');
       this.colorMartial = this.colorList[martial_cost[0]];
+      this.weightValues.set('marital-status', martial_cost[0] / percentCorrection);
     }
 
     var workclass_cost = this.compareHierachy(Cl, decideBaseNode, 'workclass')
     this.colorWorkclass = this.colorList[workclass_cost[0]];
-    console.log(workclass_cost[0]);
+    this.weightValues.set('workclass', workclass_cost[1]);
+    this.clusterChoosen = true;
+
 
   }
 
@@ -250,41 +286,41 @@ export class InteractiveComponent implements OnInit {
 
     if (value > range[1]) {
       relative_costs = value / range[1];
-      if (value < range[1] * 1.11)
+      if (value < range[1] * 1.1)
+        return [0, relative_costs];
+      if (value < range[1] * 1.2)
         return [1, relative_costs];
-      if (value < range[1] * 1.33)
+      if (value < range[1] * 1.3)
         return [2, relative_costs];
       return [3, relative_costs];
     }
     if (value < range[0]) {
       relative_costs = range[0] / value;
       if (value > range[0] * 0.9)
+        return [0, relative_costs];
+      if (value > range[0] * 0.8)
         return [1, relative_costs];
-      if (value > range[0] * 0.75)
+      if (value > range[0] * 0.7)
         return [2, relative_costs];
       return [3, relative_costs];
     }
 
-    return [3, relative_costs];
+    return [0, relative_costs];
   }
 
   private compareHierachy(Cl: any, decideBaseNode: Array<Adult>, feature: any): Array<number> {
 
-    console.log(feature);
     var cat_gh = this.sangreea.getCatHierarchy(feature);
     var Cl_feat = Cl.gen_feat[feature];
     var Y_feat = decideBaseNode[0][feature];
     if (feature == "marital-status" && Y_feat == null)
       Y_feat = decideBaseNode[0]['marital_status'];
-    console.log(Cl.gen_feat);
+
     var Cl_level = cat_gh.getLevelEntry(Cl_feat);
     var Y_level = cat_gh.getLevelEntry(Y_feat);
     var old_level = Cl_level;
     if (Cl_level == null || Y_level == null)
       return [0, 0];
-
-    console.log(feature + " " + Y_level + " " + Cl_level);
-    console.log(decideBaseNode);
 
     while (Cl_feat !== Y_feat) {
       Y_feat = cat_gh.getGeneralizationOf(Y_feat);
@@ -297,7 +333,7 @@ export class InteractiveComponent implements OnInit {
 
     var level_difference = old_level - Cl_level;
     var relative_level_change = level_difference / cat_gh._nr_levels;
-    console.log("Relative level change: " + relative_level_change);
+
     if (relative_level_change == 0)
       return [0, relative_level_change];
     if (relative_level_change < 0.33)
@@ -333,6 +369,11 @@ export class InteractiveComponent implements OnInit {
   }
 
   public ok(): void {
+    if (this.clusterChoosen)
+      VectorHelper.reduce(this.sangreea, this.weightValues, this.progressValue);
+    this.clusterChoosen = false;
+    console.log("New Weights:");
+    console.log(this.sangreea.getConfig()['GEN_WEIGHT_VECTORS']['equal']);
     if (this.option1selected) {
       this.calcNewClusterInSangreea(this.option1Cluster, this.decideBaseNode);
     } else {
