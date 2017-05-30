@@ -50,3 +50,163 @@
     </div>
   </div>
 </div>
+
+<div *ngIf="!isLoading" class="row">
+  <h2>Vector comparision</h2>
+  <div class="col-xs-12">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th style="width: 50%"><small>⬅ more</small> Bias (initial) importance <small>less ➡</small></th>
+          <th class="text-center">Column</th>
+          <th class="text-right" style="width: 50%"><small>⬅ less</small> iMl Importance <small>more ➡</small></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.float]="'right'" [style.width]="(biasV.age * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+          <td class="text-center">Age</td>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.width]="(imlV.age * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="targetColumn == 'education-num' ? false : true">
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.float]="'right'" [style.width]="(biasV['education-num'] * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+          <td class="text-center">Education</td>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.width]="(imlV['education-num'] * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.float]="'right'" [style.width]="(biasV['hours-per-week'] * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+          <td class="text-center">h/week</td>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.width]="(imlV['hours-per-week'] * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.float]="'right'" [style.width]="(biasV['native-country'] * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+          <td class="text-center">Native Country</td>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.width]="(imlV['native-country'] * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.float]="'right'" [style.width]="(biasV.sex * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+          <td class="text-center">Sex</td>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.width]="(imlV.sex * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.float]="'right'" [style.width]="(biasV.relationship * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+          <td class="text-center">Relationship</td>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.width]="(imlV.relationship * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.float]="'right'" [style.width]="(biasV.occupation * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+          <td class="text-center">Occupation</td>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.width]="(imlV.occupation * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="targetColumn == 'income' ? false : true">
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.float]="'right'" [style.width]="(biasV.income * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+          <td class="text-center">Income</td>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.width]="(imlV.income * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.float]="'right'" [style.width]="(biasV.race * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+          <td class="text-center">Race</td>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.width]="(imlV.race * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.float]="'right'" [style.width]="(biasV.workclass * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+          <td class="text-center">Work class</td>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.width]="(imlV.workclass * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="radioModel == 'marital-status' ? false : true">
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.float]="'right'" [style.width]="(biasV['marital-status'] * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+          <td class="text-center">Marital status</td>
+          <td>
+            <div class="progress-bar color stripes">
+              <span [style.width]="(imlV['marital-status'] * 100 | number:'1.0-0')+'%'"></span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -159,10 +159,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
     var csvIml: string = this.sangreea.constructAnonymizedCSV();
     var bias: any = VectorHelper.getVectorAsJson(this.sangreeaNonIml);
     var csv: string = this.sangreeaNonIml.constructAnonymizedCSV();
-
+  
     this.resultService.postToServer(this.vectorComponent.username == '' ? 'Anonym' : this.vectorComponent.username,
       bias, biasIml, csv, csvIml, this.targetColumn).subscribe(
       data => {
+        this.resultComponent.targetColumn = this.targetColumn;
+        this.resultComponent.biasV = bias;
+        this.resultComponent.imlV = bias;
         this.resultComponent.isLoading = false;
         this.resultComponent.setResponse(data);
       },
