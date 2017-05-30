@@ -39,22 +39,24 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private adults: Array<Adult> = [];
   public isInteractive: boolean = false;
   public showResult: boolean = false;
-
   private progressValue: number = 0;
+  private userQueryCounter: number;
+  private targetColumn: string;
+  private errorMessage: string = null;
+
   @ViewChild(InteractiveComponent)
   public interactive: InteractiveComponent;
+
   @ViewChild(VectorComponent)
   public vectorComponent: VectorComponent;
+
   @ViewChild('configModal')
   public configModal: ModalDirective;
+
   @ViewChild(ResultComponent)
   public resultComponent: ResultComponent;
 
-  private userQueryCounter: number;
-  private targetColumn: string;
-
   constructor(private http: Http, private resultService: ResultService) {
-    this.progressValue = 0;
   }
 
   ngOnInit() {
@@ -88,29 +90,21 @@ export class HomeComponent implements OnInit, AfterViewInit {
     config['GEN_WEIGHT_VECTORS']['equal'] = vector;
     this.targetColumn = this.vectorComponent.getTargetColumn();
     config.TARGET_COLUMN = this.targetColumn;
-    //config.REMOTE_TARGET = this.targetColumn;
-    console.log("Target column: " + this.targetColumn);
-    console.log("Created Configure Sangreea:");
-    console.log(config['GEN_WEIGHT_VECTORS']['equal']);
 
     this.sangreea = new $A.algorithms.Sangreea("testus", config);
-    this.sangreeaNonIml = new $A.algorithms.Sangreea("testus2", JSON.parse(JSON.stringify(config)));
+    this.sangreeaNonIml = new $A.algorithms.Sangreea("testus", JSON.parse(JSON.stringify(config)));
     for (let genHierarchy of this.getGenHierarchies()) {
-      let jsonx: string = JSON.stringify(genHierarchy);
-      let strgh = new $A.genHierarchy.Category(jsonx);
-      let strgh2 = new $A.genHierarchy.Category(jsonx);
+      let strgh = new $A.genHierarchy.Category(JSON.stringify(genHierarchy));
+      let strgh2 = new $A.genHierarchy.Category(JSON.stringify(genHierarchy));
       this.sangreea.setCatHierarchy(strgh._name, strgh);
       this.sangreeaNonIml.setCatHierarchy(strgh2._name, strgh2);
     }
 
-    /*
     this.sangreeaNonIml.getConfig().K_FACTOR = HomeComponent.STOP_AT_K;
-    this.sangreeaNonIml.instantiateGraph(this.csvLines, false);
+    this.sangreeaNonIml.instantiateGraph(this.csvLines.slice(), false);
     this.sangreeaNonIml.anonymizeGraph();
-    */
 
-    this.sangreea.instantiateGraph(this.csvLines, false);
-    this.sangreea.getConfig().K_FACTOR = 2;
+    this.sangreea.instantiateGraph(this.csvLines.slice(), false);
     this.sangreea.anonymizeGraph(72);
   }
 
@@ -123,15 +117,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   public startLearning(): void {
     var v: any = this.vectorComponent.createVector();
-    console.log("CREATED VECTOR:");
-    console.log(v);
-
     this.configureSangreea(v);
     this.configModal.hide();
 
+    this.progressValue = 0;
+    this.errorMessage = null;
     this.userQueryCounter = 0;
     this.isInteractive = true;
 
+    this.increaseProgressValue();
     this.interactive.configure(this.sangreea, this.adults, this.progressValue, this.targetColumn);
   }
 
@@ -142,10 +136,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
       console.log(this.sangreea.getConfig()['GEN_WEIGHT_VECTORS']['equal']['categorical']);
       console.log(this.sangreea.getConfig()['GEN_WEIGHT_VECTORS']['equal']['range']);
 
+
     if (this.userQueryCounter == HomeComponent.USER_QUERIES_PER_K) {
-      this.sangreea.getConfig().K_FACTOR++;
       this.userQueryCounter = 0;
-      console.log(this.sangreea.getConfig().K_FACTOR);
+      this.sangreea.getConfig().K_FACTOR++;
       this.sangreea.updateCurrentClusters();
       if (this.sangreea.getConfig().K_FACTOR == HomeComponent.STOP_AT_K) {
         this.isInteractive = false;
@@ -158,30 +152,43 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.interactive.configure(this.sangreea, this.adults, this.progressValue, this.targetColumn);
   }
 
-  sendToServer() {
-    //debugger;
-    //this.sangreeaNonIml.getConfig().K_FACTOR = HomeComponent.STOP_AT_K;
-    //this.sangreeaNonIml.instantiateGraph(this.csvLines, false);
-    //this.sangreeaNonIml.anonymizeGraph();
+  private increaseProgressValue() {
+    this.progressValue = this.progressValue +
+      (100 / (HomeComponent.USER_QUERIES_PER_K * (HomeComponent.STOP_AT_K - 2)));
+  }
 
+  sendToServer() {
+    this.errorMessage = null;
     var biasIml: any = VectorHelper.getVectorAsJson(this.sangreea);
     var csvIml: string = this.sangreea.constructAnonymizedCSV();
-    var bias: any = VectorHelper.getVectorAsJson(this.sangreea);
-    var csv: string = this.sangreea.constructAnonymizedCSV();
+    var bias: any = VectorHelper.getVectorAsJson(this.sangreeaNonIml);
+    var csv: string = this.sangreeaNonIml.constructAnonymizedCSV();
 
-    //var bias: any = VectorHelper.getVectorAsJson(this.sangreeaNonIml);
-    //var csv: string = this.sangreeaNonIml.constructAnonymizedCSV();
-
-
-    this.resultService.postToServer('HeinzUndStefan', bias, biasIml,
-      csv, csvIml, this.targetColumn).subscribe(
+    this.resultService.postToServer(this.vectorComponent.username == '' ? 'Anonym' : this.vectorComponent.username,
+      bias, biasIml, csv, csvIml, this.targetColumn).subscribe(
       data => {
+        this.resultComponent.targetColumn = this.targetColumn;
+        this.resultComponent.biasV = bias;
+        this.resultComponent.imlV = bias;
         this.resultComponent.isLoading = false;
         this.resultComponent.setResponse(data);
       },
-      err => console.log(err),
+      err => this.handleError(err),
       () => console.log('Request Completed')
       );
+  }
+
+  private handleError(error: Response | any) {
+    let errMsg: string;
+    if (error instanceof Response) {
+      const body = error.json() || '';
+      const err = body.error || JSON.stringify(body);
+      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+    } else {
+      errMsg = error.message ? error.message : error.toString();
+    }
+    this.errorMessage = errMsg;
+    return Observable.throw(errMsg);
   }
 
 }

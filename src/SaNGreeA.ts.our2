@@ -555,14 +555,14 @@ class SaNGreeA implements ISaNGreeA {
       return -1;
     }
 
-    var id = -1;
+    var unadded:Array<any> = [];
     for (var i = 0; i < Object.keys(this.nodes).length; i++) {
       if (!this.added[i]) {
-        id = i;
-        break;
+        unadded.push(i);
       }
     }
 
+		var id = unadded[Math.floor(Math.random() * unadded.length)];;
     this.added[id] = true;
     this.nr_open--;
     return id;

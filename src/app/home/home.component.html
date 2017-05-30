@@ -1,11 +1,22 @@
 <div class="container theme-showcase" role="main">
 
+  <div *ngIf="errorMessage" style="margin-top: 10px;" class="alert alert-danger" role="alert">
+    <strong>An error occurred!</strong> {{errorMessage}}
+  </div>
+
   <div class="page-header" *ngIf="!isInteractive && !showResult">
     <h3>Interactive Machine Learning</h3>
   </div>
 
   <div class="page-header" *ngIf="!isInteractive && showResult">
-    <h3>Result</h3>
+    <div class="row">
+      <div class="col-xs-10">
+        <h3>Result</h3>
+      </div>
+      <div class="col-xs-2">
+        <input type="button" class="btn btn-warning pull-right" value="Repeat" onclick="location.href = '.';">
+      </div>
+    </div>
   </div>
 
   <div *ngIf="!isInteractive && showResult">
@@ -43,7 +54,7 @@
 
 <div class="modal fade" bsModal #configModal="bs-modal" [config]="{backdrop: 'static'}"
   tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-md">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body">
         <app-vector></app-vector>

@@ -9,7 +9,10 @@ export class ResultComponent implements OnInit {
 
   public isLoading:boolean = true;
   public r:any;
+  public targetColumn:string;
   public keysGetter = Object.keys;
+  public biasV:any;
+  public imlV:any;
 
   constructor() { }
 
