@@ -177,7 +177,7 @@ export class InteractiveComponent implements OnInit {
       this.decidedRows2 = [];
 
       this.option1selected = true;
-      this.updateColors(this.option1Cluster, this.decideBaseNode);
+      this.updateColors(this.option1Cluster, this.decideBaseNode, this.option2Cluster);
 
       if (this.autoNext) {
         this.ok();
@@ -198,7 +198,7 @@ export class InteractiveComponent implements OnInit {
 
 
       this.option1selected = false;
-      this.updateColors(this.option2Cluster, this.decideBaseNode);
+      this.updateColors(this.option2Cluster, this.decideBaseNode, this.option1Cluster);
 
       if (this.autoNext) {
         this.ok();
@@ -220,62 +220,80 @@ export class InteractiveComponent implements OnInit {
       }
     }*/
 
-  private updateColors(Cl: any, decideBaseNode: Array<Adult>): void {
+  private updateColors(Cl: any, decideBaseNode: Array<Adult>, Cl2: any): void {
 
     this.weightValues = new Map();
 
 
     var age_cost = this.compareRange(Cl.gen_ranges.age, decideBaseNode[0]['age']);
-    console.log("Age: ");
-    console.log(age_cost);
+    var age_cost2 = this.compareRange(Cl2.gen_ranges.age, decideBaseNode[0]['age']);
     var percentCorrection = 10;
 
     this.colorAge = this.colorList[age_cost[0]];
-    this.weightValues.set('age', age_cost[0] / percentCorrection);
-
+    console.log(age_cost2[0]);
+    this.weightValues.set('age', this.compareCosts(age_cost[0], age_cost2[0]) / percentCorrection);
     if (this.targetColumn != 'education-num') {
       var education_cost = this.compareRange(Cl.gen_ranges.education, decideBaseNode[0]['education']);
+      var education_cost2 = this.compareRange(Cl2.gen_ranges.education, decideBaseNode[0]['education']);
       this.colorEducation = this.colorList[education_cost[0]];
-      this.weightValues.set('education-num', education_cost[0] / percentCorrection);
+      this.weightValues.set('education-num', this.compareCosts(education_cost[0], education_cost2[0]) / percentCorrection);
     }
 
     var hours_cost = this.compareRange(Cl.gen_ranges['hours-per-week'], decideBaseNode[0]['hours_per_week']);
+    var hours_cost2 = this.compareRange(Cl2.gen_ranges['hours-per-week'], decideBaseNode[0]['hours_per_week']);
     this.colorHours = this.colorList[hours_cost[0]];
-    this.weightValues.set('hours-per-week', hours_cost[0] / percentCorrection);
+    this.weightValues.set('hours-per-week', this.compareCosts(hours_cost[0], hours_cost2[0]) / percentCorrection);
 
     var country_cost = this.compareHierachy(Cl, decideBaseNode, 'native-country');
+    var country_cost2 = this.compareHierachy(Cl2, decideBaseNode, 'native-country');
     this.colorCountry = this.colorList[country_cost[0]];
-    this.weightValues.set('native-country', country_cost[0] / percentCorrection);
-    var sex_cost = this.compareHierachy(Cl, decideBaseNode, 'sex')
+    this.weightValues.set('native-country', this.compareCosts(country_cost[0], country_cost2[0]) / percentCorrection);
+    var sex_cost = this.compareHierachy(Cl, decideBaseNode, 'sex');
+    var sex_cost2 = this.compareHierachy(Cl2, decideBaseNode, 'sex');
     this.colorSex = this.colorList[sex_cost[0]];
-    this.weightValues.set('sex', sex_cost[0] / percentCorrection);
+    this.weightValues.set('sex', this.compareCosts(sex_cost[0], sex_cost2[0]) / percentCorrection);
     var relation_cost = this.compareHierachy(Cl, decideBaseNode, 'relationship');
+    var relation_cost2 = this.compareHierachy(Cl2, decideBaseNode, 'relationship');
     this.colorRelation = this.colorList[relation_cost[0]];
-    this.weightValues.set('relationship', relation_cost[0] / percentCorrection);
+    this.weightValues.set('relationship', this.compareCosts(relation_cost[0], relation_cost2[0]) / percentCorrection);
     var occupation_cost = this.compareHierachy(Cl, decideBaseNode, 'occupation');
+    var occupation_cost2 = this.compareHierachy(Cl2, decideBaseNode, 'occupation');
     this.colorOccupation = this.colorList[occupation_cost[0]];
-    this.weightValues.set('occupation', occupation_cost[0] / percentCorrection);
+    this.weightValues.set('occupation', this.compareCosts(occupation_cost[0], occupation_cost2[0]) / percentCorrection);
     if (this.targetColumn != 'income') {
       var income_cost = this.compareHierachy(Cl, decideBaseNode, 'income');
+      var income_cost2 = this.compareHierachy(Cl2, decideBaseNode, 'income');
       this.colorIncome = this.colorList[income_cost[0]];
-      this.weightValues.set('income', income_cost[0] / percentCorrection);
+      this.weightValues.set('income', this.compareCosts(income_cost[0], income_cost2[0]) / percentCorrection);
     }
 
     var race_cost = this.compareHierachy(Cl, decideBaseNode, 'race');
+    var race_cost2 = this.compareHierachy(Cl2, decideBaseNode, 'race');
     this.colorRace = this.colorList[race_cost[0]];
-    this.weightValues.set('race', race_cost[0] / percentCorrection);
+    this.weightValues.set('race', this.compareCosts(race_cost[0], race_cost2[0]) / percentCorrection);
     if (this.targetColumn != 'marital-status') {
       var martial_cost = this.compareHierachy(Cl, decideBaseNode, 'marital-status');
+      var martial_cost2 = this.compareHierachy(Cl2, decideBaseNode, 'marital-status');
       this.colorMartial = this.colorList[martial_cost[0]];
-      this.weightValues.set('marital-status', martial_cost[0] / percentCorrection);
+      this.weightValues.set('marital-status', this.compareCosts(martial_cost[0], martial_cost2[0]) / percentCorrection);
     }
 
-    var workclass_cost = this.compareHierachy(Cl, decideBaseNode, 'workclass')
+    var workclass_cost = this.compareHierachy(Cl, decideBaseNode, 'workclass');
+    var workclass_cost2 = this.compareHierachy(Cl2, decideBaseNode, 'workclass');
     this.colorWorkclass = this.colorList[workclass_cost[0]];
-    this.weightValues.set('workclass', workclass_cost[1]);
+    this.weightValues.set('workclass', this.compareCosts(workclass_cost[0], workclass_cost2[0]) / percentCorrection);
     this.clusterChoosen = true;
+    console.log(this.weightValues);
+    VectorHelper.reduce(this.sangreea, this.weightValues, this.progressValue);
 
+  }
 
+  private compareCosts(x: number, y: number): number {
+    if (x < y)
+      return 0;
+    else {
+      return x - y;
+    }
   }
 
   private compareRange(range: Array<number>, value: number): Array<number> {
@@ -369,8 +387,6 @@ export class InteractiveComponent implements OnInit {
   }
 
   public ok(): void {
-    if (this.clusterChoosen)
-      VectorHelper.reduce(this.sangreea, this.weightValues, this.progressValue);
     this.clusterChoosen = false;
     console.log("New Weights:");
     console.log(this.sangreea.getConfig()['GEN_WEIGHT_VECTORS']['equal']);
