@@ -1,7 +1,7 @@
 import { VectorComponent } from './vector.component';
 import { VectorHelper } from './vectorHelper';
-import { SaNGreeA, ISaNGreeAConfig } from 'anonymiationjs';
-import * as $A from 'anonymiationjs';
+import { SaNGreeA, ISaNGreeAConfig } from 'anonymizationjs';
+import * as $A from 'anonymizationjs';
 
 describe('Vector Helper', () => {
   it('should recalculate the vector', () => {

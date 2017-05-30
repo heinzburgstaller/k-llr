@@ -228,7 +228,7 @@ export class InteractiveComponent implements OnInit {
     var age_cost = this.compareRange(Cl.gen_ranges.age, decideBaseNode[0]['age']);
     console.log("Age: ");
     console.log(age_cost);
-    var percentCorrection = 100;
+    var percentCorrection = 10;
 
     this.colorAge = this.colorList[age_cost[0]];
     this.weightValues.set('age', age_cost[0] / percentCorrection);
