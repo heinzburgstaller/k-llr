@@ -169,7 +169,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       data => {
         this.resultComponent.targetColumn = this.targetColumn;
         this.resultComponent.biasV = bias;
-        this.resultComponent.imlV = bias;
+        this.resultComponent.imlV = biasIml;
         this.resultComponent.isLoading = false;
         this.resultComponent.setResponse(data);
       },
