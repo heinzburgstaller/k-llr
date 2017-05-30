@@ -395,6 +395,7 @@ export class InteractiveComponent implements OnInit {
     } else {
       this.calcNewClusterInSangreea(this.option2Cluster, this.decideBaseNode);
     }
+    console.log(this.sangreea.getConfig()['GEN_WEIGHT_VECTORS']['equal']);
     this.onOk.emit();
   }
 
