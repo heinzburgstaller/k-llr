@@ -9,7 +9,14 @@
   </div>
 
   <div class="page-header" *ngIf="!isInteractive && showResult">
-    <h3>Result</h3>
+    <div class="row">
+      <div class="col-xs-10">
+        <h3>Result</h3>
+      </div>
+      <div class="col-xs-2">
+        <input type="button" class="btn btn-warning pull-right" value="Repeat" onclick="location.href = '.';">
+      </div>
+    </div>
   </div>
 
   <div *ngIf="!isInteractive && showResult">
