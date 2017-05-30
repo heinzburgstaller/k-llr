@@ -1,7 +1,7 @@
 <div *ngIf="isLoading" class="row">
   <div class="alert alert-info" role="alert">
-    <strong>Please wait!</strong> The result is calculated on a slow server.
-     This could take up to two minutes...
+    <strong>Please wait!</strong> The result is calculated on a slow server. This
+    could take up to two minutes...
   </div>
   <div class="col-xs-12">
     <img class="center-block" src="../../assets/image/spinner.gif">
@@ -16,6 +16,7 @@
         <h4>Result for {{r.grouptoken}}/{{r.usertoken}}</h4>
         <p><strong>Target column:</strong> {{r.target}}</p>
         <p><strong>Timestamp:</strong> {{r.timestamp}}</p>
+        <input type="button" class="btn btn-warning" value="Repeat" onclick="location.href = '.';">
       </div>
     </div>
   </div>
