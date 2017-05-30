@@ -2,7 +2,8 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Adult, AdultGen } from '../adult';
 import { SaNGreeA } from 'anonymizationjs';
 import { ProgressGraphSettings } from './progressGraphSettings';
-import {VectorHelper} from '../vector/vectorHelper';
+import { VectorHelper } from '../vector/vectorHelper';
+import { CookieService } from 'ngx-cookie';
 
 @Component({
   selector: 'app-interactive',
@@ -16,6 +17,7 @@ export class InteractiveComponent implements OnInit {
   private progressValue: number = 0;
   private autoNext: boolean = false;
   private targetColumn: string;
+  private showInfo: boolean = false;
 
   public option1Rows: Array<AdultGen> = [];
   public option2Rows: Array<AdultGen> = [];
@@ -51,10 +53,14 @@ export class InteractiveComponent implements OnInit {
 
   @Output() onOk = new EventEmitter<any>();
 
-  constructor() {
+  constructor(private cookieService: CookieService) {
   }
 
   ngOnInit() {
+    var info = this.cookieService.get('infoRead');
+    if (info == null) {
+      this.showInfo = true;
+    }
   }
 
   public configure(s: SaNGreeA, a: Array<Adult>, progressValue: number, targetColumn: string): void {
@@ -397,6 +403,11 @@ export class InteractiveComponent implements OnInit {
     }
     console.log(this.sangreea.getConfig()['GEN_WEIGHT_VECTORS']['equal']);
     this.onOk.emit();
+  }
+
+  public gotIt() {
+    this.cookieService.put('infoRead', 'true');
+    this.showInfo = false;
   }
 
 }

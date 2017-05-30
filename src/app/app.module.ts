@@ -18,10 +18,10 @@ import { InteractiveComponent } from './interactive/interactive.component';
 import { ChooseAnonComponent } from './choose-anon/choose-anon.component';
 
 import { DragulaModule } from 'ng2-dragula';
-
 import { GaugeModule } from 'ng-gauge';
-
 import { DndModule } from 'ng2-dnd';
+import { CookieModule } from 'ngx-cookie';
+
 import { VectorComponent } from './vector/vector.component';
 import { ResultComponent } from './result/result.component';
 import { ResultItem } from './result/resultItem.component';
@@ -58,7 +58,8 @@ const routes: Routes = [
     DataTableModule,
     DragulaModule,
     GaugeModule,
-    DndModule.forRoot()
+    DndModule.forRoot(),
+    CookieModule.forRoot()
   ],
   providers: [ResultService],
   bootstrap: [AppComponent]
