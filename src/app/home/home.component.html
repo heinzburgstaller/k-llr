@@ -1,5 +1,9 @@
 <div class="container theme-showcase" role="main">
 
+  <div *ngIf="errorMessage" style="margin-top: 10px;" class="alert alert-danger" role="alert">
+    <strong>An error occurred!</strong> {{errorMessage}}
+  </div>
+
   <div class="page-header" *ngIf="!isInteractive && !showResult">
     <h3>Interactive Machine Learning</h3>
   </div>

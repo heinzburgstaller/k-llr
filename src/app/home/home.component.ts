@@ -21,7 +21,6 @@ import * as occupationGH from '../../genHierarchies/occupationGH.json';
 import * as incomeGH from '../../genHierarchies/incomeGH.json';
 
 import * as $A from 'anonymizationjs';
-import * as $A2 from 'anonymizationjs';
 
 @Component({
   selector: 'app-home',
@@ -40,22 +39,24 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private adults: Array<Adult> = [];
   public isInteractive: boolean = false;
   public showResult: boolean = false;
-
   private progressValue: number = 0;
+  private userQueryCounter: number;
+  private targetColumn: string;
+  private errorMessage: string = null;
+
   @ViewChild(InteractiveComponent)
   public interactive: InteractiveComponent;
+
   @ViewChild(VectorComponent)
   public vectorComponent: VectorComponent;
+
   @ViewChild('configModal')
   public configModal: ModalDirective;
+
   @ViewChild(ResultComponent)
   public resultComponent: ResultComponent;
 
-  private userQueryCounter: number;
-  private targetColumn: string;
-
   constructor(private http: Http, private resultService: ResultService) {
-    this.progressValue = 0;
   }
 
   ngOnInit() {
@@ -89,32 +90,21 @@ export class HomeComponent implements OnInit, AfterViewInit {
     config['GEN_WEIGHT_VECTORS']['equal'] = vector;
     this.targetColumn = this.vectorComponent.getTargetColumn();
     config.TARGET_COLUMN = this.targetColumn;
-    //config.REMOTE_TARGET = this.targetColumn;
-    //console.log("Target column: " + this.targetColumn);
-    //console.log("Created Configure Sangreea:");
-    //console.log(config['GEN_WEIGHT_VECTORS']['equal']);
-
-    var config2: ISaNGreeAConfig = $A2.config.adults;
-    config2.NR_DRAWS = this.adults.length;
-    config2.K_FACTOR = 7;
-    config2['GEN_WEIGHT_VECTORS']['equal'] = vector;
-    this.targetColumn = this.vectorComponent.getTargetColumn();
-    config2.TARGET_COLUMN = this.targetColumn;
 
     this.sangreea = new $A.algorithms.Sangreea("testus", config);
-    this.sangreeaNonIml = new $A2.algorithms.Sangreea("testus2", config2);
+    this.sangreeaNonIml = new $A.algorithms.Sangreea("testus", JSON.parse(JSON.stringify(config)));
     for (let genHierarchy of this.getGenHierarchies()) {
       let strgh = new $A.genHierarchy.Category(JSON.stringify(genHierarchy));
-      let strgh2 = new $A2.genHierarchy.Category(JSON.stringify(genHierarchy));
+      let strgh2 = new $A.genHierarchy.Category(JSON.stringify(genHierarchy));
       this.sangreea.setCatHierarchy(strgh._name, strgh);
       this.sangreeaNonIml.setCatHierarchy(strgh2._name, strgh2);
     }
 
+    this.sangreeaNonIml.getConfig().K_FACTOR = HomeComponent.STOP_AT_K;
     this.sangreeaNonIml.instantiateGraph(this.csvLines.slice(), false);
     this.sangreeaNonIml.anonymizeGraph();
 
     this.sangreea.instantiateGraph(this.csvLines.slice(), false);
-    this.sangreea.getConfig().K_FACTOR = 2;
     this.sangreea.anonymizeGraph(72);
   }
 
@@ -127,12 +117,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   public startLearning(): void {
     var v: any = this.vectorComponent.createVector();
-    console.log("CREATED VECTOR:");
-    console.log(v);
-
     this.configureSangreea(v);
     this.configModal.hide();
 
+    this.progressValue = 0;
+    this.errorMessage = null;
     this.userQueryCounter = 0;
     this.isInteractive = true;
 
@@ -145,9 +134,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.increaseProgressValue();
 
     if (this.userQueryCounter == HomeComponent.USER_QUERIES_PER_K) {
-      this.sangreea.getConfig().K_FACTOR++;
       this.userQueryCounter = 0;
-      console.log(this.sangreea.getConfig().K_FACTOR);
+      this.sangreea.getConfig().K_FACTOR++;
       this.sangreea.updateCurrentClusters();
       if (this.sangreea.getConfig().K_FACTOR == HomeComponent.STOP_AT_K) {
         this.isInteractive = false;
@@ -166,9 +154,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   sendToServer() {
+    this.errorMessage = null;
     var biasIml: any = VectorHelper.getVectorAsJson(this.sangreea);
     var csvIml: string = this.sangreea.constructAnonymizedCSV();
-
     var bias: any = VectorHelper.getVectorAsJson(this.sangreeaNonIml);
     var csv: string = this.sangreeaNonIml.constructAnonymizedCSV();
 
@@ -178,9 +166,22 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.resultComponent.isLoading = false;
         this.resultComponent.setResponse(data);
       },
-      err => console.log(err),
+      err => this.handleError(err),
       () => console.log('Request Completed')
       );
+  }
+
+  private handleError(error: Response | any) {
+    let errMsg: string;
+    if (error instanceof Response) {
+      const body = error.json() || '';
+      const err = body.error || JSON.stringify(body);
+      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+    } else {
+      errMsg = error.message ? error.message : error.toString();
+    }
+    this.errorMessage = errMsg;
+    return Observable.throw(errMsg);
   }
 
 }
