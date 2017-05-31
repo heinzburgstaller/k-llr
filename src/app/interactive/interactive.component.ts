@@ -74,21 +74,25 @@ export class InteractiveComponent implements OnInit {
     this.anon();
   }
 
-  private anon(): void {
+  private setRandomClusters() {
     this.option1Cluster = this.selectRandomCluster(this.sangreea._clusters);
-
     this.option1Rows = this.getAdultGensFromCluster(this.option1Cluster);
-    this.option2Cluster = this.selectRandomCluster(this.sangreea._clusters);
-    this.option2Rows = this.getAdultGensFromCluster(this.option2Cluster);
-    let nodeId = this.sangreea.acquireUnaddedNodeId();
-    this.decideRows = [this.adults[nodeId]];
-    this.decideBaseNode = this.decideRows;
+    do {
+      this.option2Cluster = this.selectRandomCluster(this.sangreea._clusters);
+      this.option2Rows = this.getAdultGensFromCluster(this.option2Cluster);
+    } while (this.option1Cluster == this.option2Cluster);
 
     this.option1Costs = this.sangreea.calculateGIL(this.option1Cluster,
       this.sangreea._graph.getNodeById(this.decideRows[0].id));
-
     this.option2Costs = this.sangreea.calculateGIL(this.option2Cluster,
       this.sangreea._graph.getNodeById(this.decideRows[0].id));
+  }
+
+  private anon(): void {
+    let nodeId = this.sangreea.acquireUnaddedNodeId();
+    this.decideRows = [this.adults[nodeId]];
+    this.decideBaseNode = this.decideRows;
+    this.setRandomClusters();
   }
 
   private selectRandomCluster(clusters) {
@@ -390,6 +394,11 @@ export class InteractiveComponent implements OnInit {
         break;
       }
     }
+  }
+
+  public skip():void {
+    this.clusterChoosen = false;
+    this.onOk.emit();
   }
 
   public ok(): void {
