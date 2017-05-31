@@ -1,0 +1,8 @@
+.progressHeader progressbar {
+  margin-top: 11px;
+  display: block;
+}
+
+.progressHeader button {
+  margin-top: 4px;
+}

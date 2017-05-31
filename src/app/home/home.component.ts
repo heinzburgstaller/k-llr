@@ -29,7 +29,7 @@ import * as $A from 'anonymizationjs';
 })
 export class HomeComponent implements OnInit, AfterViewInit {
 
-  public static USER_QUERIES_PER_K: number = 1;
+  public static USER_QUERIES_PER_K: number = 6;
   public static STOP_AT_K: number = 7;
 
   private adultReader: AdultReader = new AdultReader();
