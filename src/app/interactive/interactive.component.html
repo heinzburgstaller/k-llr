@@ -37,11 +37,13 @@
 <div class="row">
   <div class="col-xs-10">
     <div>
-      <h4>Option 1</h4>
-      <table dnd-droppable class="table table-striped" [mfData]="option1Rows" #mf1="mfDataTable"
-        (onDragStart)="dragStart($event)" (onDragLeave)="dragLeave($event)" (onDragOver)="dragOverOption1($event)"
-        (onDropSuccess)="dragDropOption1($event)">
+      <table dnd-droppable class="table table-sm table-striped" [mfData]="option1Rows"
+        #mf1="mfDataTable" (onDragStart)="dragStart($event)" (onDragLeave)="dragLeave($event)"
+        (onDragOver)="dragOverOption1($event)" (onDropSuccess)="dragDropOption1($event)">
         <thead>
+          <tr>
+            <th colspan="11">Cluster Option 1</th>
+          </tr>
           <tr>
             <th style="width: 8%">Age</th>
             <th style="width: 5%">Edu.</th>
@@ -113,7 +115,8 @@
 
   <div class="row">
     <div class="col-xs-10">
-      <table dnd-draggable [dragEnabled]="true" class="table" [mfData]="decideRows" #mfDecide="mfDataTable">
+      <table dnd-draggable [dragEnabled]="true" class="table table-sm" [mfData]="decideRows"
+        #mfDecide="mfDataTable">
         <tbody>
           <tr *ngFor="let item of mfDecide.data" class="success">
             <td style="width: 8%; text-align: right">{{item.age}}</td>
@@ -143,11 +146,13 @@
 <div class="row">
   <div class="col-xs-10">
     <div>
-      <h4>Option 2</h4>
-      <table dnd-droppable class="table table-striped" [mfData]="option2Rows" #mf2="mfDataTable"
-        (onDragStart)="dragStart($event)" (onDragLeave)="dragLeave($event)" (onDragOver)="dragOverOption2($event)"
-        (onDropSuccess)="dragDropOption2($event)">
+      <table dnd-droppable class="table table-sm table-striped" [mfData]="option2Rows"
+        #mf2="mfDataTable" (onDragStart)="dragStart($event)" (onDragLeave)="dragLeave($event)"
+        (onDragOver)="dragOverOption2($event)" (onDropSuccess)="dragDropOption2($event)">
         <thead>
+          <tr>
+            <th colspan="11">Cluster Option 2</th>
+          </tr>
           <tr>
             <th style="width: 8%">Age</th>
             <th style="width: 5%">Edu.</th>
